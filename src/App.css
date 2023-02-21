@@ -8,7 +8,44 @@
 }
 
 .todolist {
-  border: 2px solid black;
+  border: 2px solid hotpink;
   border-radius: 5px;
   padding: 20px;
+}
+
+
+.task {
+  font-weight: bold;
+}
+
+.task-is-done {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.active-filter {
+  background-color: hotpink;
+  font-weight: bold;
+  color: white;
+  border: 2px solid hotpink;
+  border-radius: 3px ;
+}
+
+.filter-button {
+  background-color: gray;
+  font-weight: bold;
+  color: white;
+  border: 2px solid gray;
+  border-radius: 3px ;
+}
+
+.filter-btn-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.input-error {
+  border: 2px solid hotpink;
+  border-radius: 2px;
+  outline: none;
 }

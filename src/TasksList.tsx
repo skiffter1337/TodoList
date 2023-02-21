@@ -1,30 +1,33 @@
-import React from 'react';
+import React, {ChangeEvent} from 'react';
 import {TaskType} from "./TodoList";
 
-type TasksListPropsType= {
+type TasksListPropsType = {
     tasks: TaskType[]
-    removeTasks: (tasksId: string)=>void
+    removeTasks: (tasksId: string) => void
+    changeTaskStatus: (taskId: string, newIsDone: boolean) => void
 
 }
 
 
-const  TasksList = (props: TasksListPropsType) => {
-        const tasksItems: JSX.Element[] | JSX.Element = props.tasks.length
-            ? props.tasks.map((task) => {
-              const  removeTask = () => props.removeTasks(task.id)
-                return (
-                    <li key={task.id}>
-                        <input type="checkbox" checked={task.isDone}/>
-                        <span>{task.title}</span>
-                        <button onClick={removeTask}>X</button>
-                    </li>
-                )
-            })
-            : <span>Your taskslist is empty</span>
-        return (
-            <ul>
-                {tasksItems}
-            </ul>
+const TasksList = (props: TasksListPropsType) => {
+    const tasksItems: JSX.Element[] | JSX.Element = props.tasks.length
+        ? props.tasks.map((task) => {
+            const removeTaskHandler = () => props.removeTasks(task.id)
+            const onChangeCheckboxHandler = (e: ChangeEvent<HTMLInputElement>) => props.changeTaskStatus(task.id, e.currentTarget.checked)
+
+            return (
+                <li key={task.id}>
+                    <input onChange={onChangeCheckboxHandler} type="checkbox" checked={task.isDone}/>
+                    <span className={task.isDone ? "task-is-done" : ""}>{task.title}</span>
+                    <button onClick={removeTaskHandler}>X</button>
+                </li>
+            )
+        })
+        : <span>Your taskslist is empty</span>
+    return (
+        <ul>
+            {tasksItems}
+        </ul>
     );
 };
 
