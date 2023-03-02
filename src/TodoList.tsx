@@ -1,15 +1,18 @@
-import React, {ChangeEvent, KeyboardEventHandler, RefObject, useRef, useState, KeyboardEvent} from 'react';
+import React, {ChangeEvent, useState, KeyboardEvent} from 'react';
 import TasksList from "./TasksList";
 import {FilteredType} from "./App";
 
 type TodoListPropsType = {
+    todoListId: string
     title: string
     tasks: TaskType[]
-    removeTasks: (tasksId: string) => void
-    setFilter: (filter: FilteredType) => void
-    addNewTask: (title: string) => void
-    changeTaskStatus: (taskId: string, newIsDone: boolean) => void
     filter: FilteredType
+
+    removeTasks: (tasksId: string, todoListId: string) => void
+    addNewTask: (title: string, todoListId: string) => void
+    changeTaskStatus: (taskId: string, newIsDone: boolean, todoListId: string) => void
+
+    changeFilter: (filter: FilteredType, todoListId: string)=>void
 }
 export type TaskType = {
     id: string
@@ -39,13 +42,13 @@ export const TodoList = (props: TodoListPropsType) => {
     const addTask = () => {
         const trimmedTitle = title.trim()
         if (trimmedTitle) {
-            props.addNewTask(title)
+            props.addNewTask(title, props.todoListId)
         } else setError(true)
         setTitle("")
     }
     const onKeyDownTask = (event: KeyboardEvent<HTMLInputElement>) => event.key === "Enter" && title.length < 15 && addTask()
 
-    const filterHandlerCreator = (filter: FilteredType) => props.setFilter(filter)
+    const filterHandlerCreator = (filter: FilteredType) => ()=> props.changeFilter(filter, props.todoListId)
 
 
 
@@ -70,18 +73,19 @@ export const TodoList = (props: TodoListPropsType) => {
                 {taskErrorMessage}
             </div>
             <TasksList
+                todoListId={props.todoListId}
                 changeTaskStatus={props.changeTaskStatus}
                 tasks={props.tasks}
                 removeTasks={props.removeTasks}/>
             <div className="filter-btn-container">
                 <button className={allButtonClasses}
-                        onClick={() => filterHandlerCreator("all")}>All
+                        onClick={filterHandlerCreator("all")}>All
                 </button>
                 <button className={activeButtonClasses}
-                        onClick={() => filterHandlerCreator("active")}>Active
+                        onClick={filterHandlerCreator("active")}>Active
                 </button>
                 <button className={completedButtonClasses}
-                        onClick={() => filterHandlerCreator("completed")}>Completed
+                        onClick={filterHandlerCreator("completed")}>Completed
                 </button>
             </div>
         </div>
