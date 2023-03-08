@@ -1,6 +1,7 @@
-import React, {ChangeEvent, useState, KeyboardEvent} from 'react';
+import React from "react";
 import TasksList from "./TasksList";
 import {FilteredType} from "./App";
+import {AddItemForm} from "./Components/AddItemForm/AddItemForm";
 
 type TodoListPropsType = {
     todoListId: string
@@ -14,6 +15,7 @@ type TodoListPropsType = {
 
     changeFilter: (filter: FilteredType, todoListId: string)=>void
     removeTodoList: (todoListId: string)=>void
+    addTodoList: (newTitle: string, todoListId: string)=>void
 }
 export type TaskType = {
     id: string
@@ -23,37 +25,17 @@ export type TaskType = {
 }
 
 export const TodoList = (props: TodoListPropsType) => {
-    const [error, setError] = useState<boolean>(false)
-    const [title, setTitle] = useState<string>("")
 
-    const maxTaskLength: number = 15
-    const isTaskLengthTooLong: boolean = title.length > maxTaskLength
-    const taskMaxLengthMessage = isTaskLengthTooLong && title.trim() && <div style={{color: "hotpink"}}>Task title is too long!</div>
-    const taskErrorMessage = error && <div style={{color: "hotpink"}}>Task is required</div>
-    const inputErrorClasses = error || isTaskLengthTooLong ? "input-error" : ""
-    const inputButtonDisabling = title.trim().length === 0 || !title || isTaskLengthTooLong
+
+
     const allButtonClasses = props.filter === "all" ? "active-filter" : "filter-button"
     const activeButtonClasses = props.filter === "active" ? "active-filter" : "filter-button"
     const completedButtonClasses = props.filter === "completed" ? "active-filter" : "filter-button"
 
-    const changeLocalTitle = (event: ChangeEvent<HTMLInputElement>) => {
-        error && setError(false)
-        setTitle(event.currentTarget.value)
-    }
-    const addTask = () => {
-        const trimmedTitle = title.trim()
-        if (trimmedTitle) {
-            props.addNewTask(title, props.todoListId)
-        } else setError(true)
-        setTitle("")
-    }
-    const onKeyDownTask = (event: KeyboardEvent<HTMLInputElement>) => event.key === "Enter" && title.length < 15 && addTask()
-
     const filterHandlerCreator = (filter: FilteredType) => ()=> props.changeFilter(filter, props.todoListId)
+    const addTaskHandler = (todoListId: string, newTitle: string) => props.addNewTask(todoListId, newTitle)
+    const removeTodoListHandler = () => props.removeTodoList(props.todoListId)
 
- const removeTodoListHandler = () => {
-   props.removeTodoList(props.todoListId)
- }
 
 
     return (
@@ -62,22 +44,7 @@ export const TodoList = (props: TodoListPropsType) => {
                 {props.title}
                 <button onClick={removeTodoListHandler}>X</button>
             </h3>
-            <div>
-                <input
-                    placeholder={"Enter your task"}
-                    value={title}
-                    onChange={changeLocalTitle}
-                    onKeyDown={onKeyDownTask}
-                    className={inputErrorClasses}
-                />
-                <button
-                    disabled={inputButtonDisabling}
-                    onClick={addTask}>
-                    +
-                </button>
-                {taskMaxLengthMessage}
-                {taskErrorMessage}
-            </div>
+            <AddItemForm callback={(newTitle) => addTaskHandler(props.todoListId, newTitle)}/>
             <TasksList
                 todoListId={props.todoListId}
                 changeTaskStatus={props.changeTaskStatus}
@@ -97,5 +64,4 @@ export const TodoList = (props: TodoListPropsType) => {
         </div>
     );
 };
-
 
