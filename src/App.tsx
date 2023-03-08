@@ -45,21 +45,16 @@ const App = () => {
         ...tasks,
         [todoListId]: tasks[todoListId].filter(t => t.id !== tasksId)
     })
-
     const addNewTask = (todoListId: string, title: string) => {
         let newTask: TaskType = {id: v1(), title: title, isDone: false}
         setTasks({...tasks, [todoListId]: [newTask, ...tasks[todoListId]]})
     }
-
-    const changeTaskStatus = (tasksId: string, newIsDone: boolean, todoListId: string) => setTasks({
-        ...tasks,
-        [todoListId]: tasks[todoListId].map(t => t.id === tasksId ? {...t, isDone: newIsDone} : t)
-    })
-
-    const changeFilter = (value: FilteredType, todoListId: string) => setTodoList(todoLists.map(tl => tl.id === todoListId ? {
-        ...tl,
-        filter: value
-    } : tl))
+    const changeTaskStatus = (tasksId: string, newIsDone: boolean, todoListId: string) => {
+        setTasks({...tasks, [todoListId]: tasks[todoListId].map(t => t.id === tasksId ? {...t, isDone: newIsDone} : t)})
+    }
+    const changeFilter = (value: FilteredType, todoListId: string) => {
+        setTodoList(todoLists.map(tl => tl.id === todoListId ? {...tl, filter: value} : tl))
+    }
 
     const removeTodoList = (todoListId: string) => setTodoList(todoLists.filter(tl => tl.id !== todoListId))
     const addTodoList = (newTitle: string) => {
@@ -67,6 +62,12 @@ const App = () => {
         let newTodoList: TodoListType = {id: newTodoListID, title: newTitle, filter: "all"}
         setTodoList([newTodoList, ...todoLists])
         setTasks({...tasks, [newTodoListID]: []})
+    }
+    const updateTodoListTitle = (todoListId: string , newTitle: string) => {
+      setTodoList(todoLists.map(el => el.id === todoListId ? {...el, title: newTitle} : el))
+    }
+    const updateTaskTitle = (todoListId: string, taskID: string, newTitle: string) => {
+    setTasks({...tasks, [todoListId]: tasks[todoListId].map(el => el.id === taskID ? {...el, title: newTitle} : el)})
     }
 
     const mappedTodoLists = todoLists.map(tl => {
@@ -82,15 +83,18 @@ const App = () => {
                 <TodoList
                     key={tl.id}
                     todoListId={tl.id}
-                    title={tl.title}
+                    todoListTitle={tl.title}
                     filter={tl.filter}
                     tasks={filteredTasks}
                     removeTasks={removeTasks}
                     addNewTask={addNewTask}
                     changeTaskStatus={changeTaskStatus}
+                    updateTaskTitle={updateTaskTitle}
                     changeFilter={changeFilter}
                     removeTodoList={removeTodoList}
                     addTodoList={addTodoList}
+                    updateTodoListTitle={updateTodoListTitle}
+
 
                 />
             )
