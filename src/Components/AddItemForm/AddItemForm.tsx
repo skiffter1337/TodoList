@@ -3,7 +3,6 @@ import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 
 type PropsType = {
-
     callback: (newTitle: string)=>void
 }
 
