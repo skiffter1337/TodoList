@@ -3,6 +3,9 @@ import './App.css';
 import {TodoList, TaskType} from "./TodoList";
 import {v1} from "uuid";
 import {AddItemForm} from "./Components/AddItemForm/AddItemForm";
+import Container from '@mui/material/Container';
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 
 type TodoListType = {
     id: string
@@ -79,7 +82,8 @@ const App = () => {
             if (tl.filter === "completed") {
                 filteredTasks = tasks[tl.id].filter(task => task.isDone)
             }
-            return (
+            return <Grid item>
+                <Paper elevation={7}>
                 <TodoList
                     key={tl.id}
                     todoListId={tl.id}
@@ -97,14 +101,21 @@ const App = () => {
 
 
                 />
-            )
+                </Paper>
+            </Grid>
         }
     )
 
     return (
         <div className="App">
+            <Container>
+                <Grid container style={{padding: "20px"}}>
             <AddItemForm callback={(newTitle) => addTodoList(newTitle)}/>
+                </Grid>
+                <Grid container spacing={3}>
             {mappedTodoLists}
+                </Grid>
+            </Container>
         </div>
     );
 }

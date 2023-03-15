@@ -8,7 +8,7 @@
 }
 
 .todolist {
-  border: 2px solid hotpink;
+  border: 2px solid #003459;
   border-radius: 5px;
   padding: 20px;
   background-color: #f2f2f2;
@@ -24,29 +24,29 @@
   opacity: 0.5;
 }
 
-.active-filter {
-  background-color: hotpink;
-  font-weight: bold;
-  color: white;
-  border: 2px solid hotpink;
-  border-radius: 3px ;
-}
+/*.active-filter {*/
+/*  background-color: hotpink;*/
+/*  font-weight: bold;*/
+/*  color: white;*/
+/*  border: 2px solid hotpink;*/
+/*  border-radius: 3px ;*/
+/*}*/
 
-.filter-button {
-  background-color: gray;
-  font-weight: bold;
-  color: white;
-  border: 2px solid gray;
-  border-radius: 3px ;
-}
+/*.filter-button {*/
+/*  background-color: gray;*/
+/*  font-weight: bold;*/
+/*  color: white;*/
+/*  border: 2px solid gray;*/
+/*  border-radius: 3px ;*/
+/*}*/
 
 .filter-btn-container {
   display: flex;
   justify-content: space-around;
 }
 
-.input-error {
-  border: 2px solid hotpink;
-  border-radius: 2px;
-  outline: none;
-}
+/*.input-error {*/
+/*  border: 2px solid #003459;*/
+/*  border-radius: 2px;*/
+/*  outline: none;*/
+/*}*/

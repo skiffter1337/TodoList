@@ -3,6 +3,9 @@ import TasksList from "./TasksList";
 import {FilteredType} from "./App";
 import {AddItemForm} from "./Components/AddItemForm/AddItemForm";
 import {EditableSpan} from "./Components/EditableSpan/EditableSpan";
+import Button from "@mui/material/Button";
+import {DeleteOutlined} from "@material-ui/icons/";
+import IconButton from "@mui/material/IconButton";
 
 type TodoListPropsType = {
     todoListId: string
@@ -13,12 +16,12 @@ type TodoListPropsType = {
     removeTasks: (tasksId: string, todoListId: string) => void
     addNewTask: (title: string, todoListId: string) => void
     changeTaskStatus: (taskId: string, newIsDone: boolean, todoListId: string) => void
-    updateTaskTitle: (todoListId: string, taskID: string, newTitle: string)=>void
+    updateTaskTitle: (todoListId: string, taskID: string, newTitle: string) => void
 
-    changeFilter: (filter: FilteredType, todoListId: string)=>void
-    removeTodoList: (todoListId: string)=>void
-    addTodoList: (newTitle: string, todoListId: string)=>void
-    updateTodoListTitle: (todoListId: string, newTitle: string)=>void
+    changeFilter: (filter: FilteredType, todoListId: string) => void
+    removeTodoList: (todoListId: string) => void
+    addTodoList: (newTitle: string, todoListId: string) => void
+    updateTodoListTitle: (todoListId: string, newTitle: string) => void
 
 }
 export type TaskType = {
@@ -31,12 +34,13 @@ export type TaskType = {
 export const TodoList = (props: TodoListPropsType) => {
 
 
+    const activeFilterButtonsStyles = {backgroundColor: "#003459", color: "white"}
+    const unActiveFilterButtonsStyles = {backgroundColor: "white", color: "#003459", border: "1px solid #003459"}
+    const allButtonClasses = props.filter === "all" ? activeFilterButtonsStyles : unActiveFilterButtonsStyles
+    const activeButtonClasses = props.filter === "active" ? activeFilterButtonsStyles : unActiveFilterButtonsStyles
+    const completedButtonClasses = props.filter === "completed" ? activeFilterButtonsStyles : unActiveFilterButtonsStyles
 
-    const allButtonClasses = props.filter === "all" ? "active-filter" : "filter-button"
-    const activeButtonClasses = props.filter === "active" ? "active-filter" : "filter-button"
-    const completedButtonClasses = props.filter === "completed" ? "active-filter" : "filter-button"
-
-    const filterHandlerCreator = (filter: FilteredType) => ()=> props.changeFilter(filter, props.todoListId)
+    const filterHandlerCreator = (filter: FilteredType) => () => props.changeFilter(filter, props.todoListId)
     const addTaskHandler = (todoListId: string, newTitle: string) => props.addNewTask(todoListId, newTitle)
     const removeTodoListHandler = () => props.removeTodoList(props.todoListId)
     const updateTodoListTitleHandler = (todoListId: string, newTitle: string) => props.updateTodoListTitle(todoListId, newTitle)
@@ -45,8 +49,9 @@ export const TodoList = (props: TodoListPropsType) => {
     return (
         <div className={"todolist"}>
             <h3>
-                <EditableSpan callback={(newTitle) => updateTodoListTitleHandler(props.todoListId, newTitle)} oldTitle={props.todoListTitle}/>
-                <button onClick={removeTodoListHandler}>X</button>
+                <EditableSpan callback={(newTitle) => updateTodoListTitleHandler(props.todoListId, newTitle)}
+                              oldTitle={props.todoListTitle}/>
+                <IconButton onClick={removeTodoListHandler}>{<DeleteOutlined/>}</IconButton>
             </h3>
             <AddItemForm callback={(newTitle) => addTaskHandler(props.todoListId, newTitle)}/>
             <TasksList
@@ -57,15 +62,15 @@ export const TodoList = (props: TodoListPropsType) => {
                 updateTaskTitle={props.updateTaskTitle}
             />
             <div className="filter-btn-container">
-                <button className={allButtonClasses}
+                <Button size="small" color="secondary" style={allButtonClasses}
                         onClick={filterHandlerCreator("all")}>All
-                </button>
-                <button className={activeButtonClasses}
+                </Button>
+                <Button size="small" color="secondary" style={activeButtonClasses}
                         onClick={filterHandlerCreator("active")}>Active
-                </button>
-                <button className={completedButtonClasses}
+                </Button>
+                <Button size="small" color="secondary" style={completedButtonClasses}
                         onClick={filterHandlerCreator("completed")}>Completed
-                </button>
+                </Button>
             </div>
         </div>
     );

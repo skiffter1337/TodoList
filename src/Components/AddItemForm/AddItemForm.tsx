@@ -1,4 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
 
 type PropsType = {
 
@@ -30,23 +32,27 @@ export const AddItemForm = (props: PropsType) => {
     const isTaskLengthTooLong: boolean = title.length > maxTaskLength
     const inputErrorClasses = error || isTaskLengthTooLong ? "input-error" : ""
     const inputButtonDisabling = title.trim().length === 0 || !title || isTaskLengthTooLong
-    const taskMaxLengthMessage = isTaskLengthTooLong && title.trim() && <div style={{color: "hotpink"}}>Task title is too long!</div>
-    const taskErrorMessage = error && <div style={{color: "hotpink"}}>Task is required</div>
+    const taskMaxLengthMessage = isTaskLengthTooLong && title.trim() && <div style={{color: "#003459"}}>Title length is too long!</div>
+    const taskErrorMessage = error && <div style={{color: "#003459"}}>Title is required</div>
 
     return (
         <div>
-            <input
-                placeholder={"Enter your task"}
+            <TextField
                 value={title}
                 onChange={changeLocalTitle}
                 onKeyDown={onKeyDownTask}
                 className={inputErrorClasses}
+                id="standard-basic"
+                size="small"
+                label="Enter your task"
             />
-            <button
+            <IconButton
                 disabled={inputButtonDisabling}
-                onClick={addItem}>
+                onClick={addItem}
+
+            >
                 +
-            </button>
+            </IconButton>
             {taskMaxLengthMessage}
             {taskErrorMessage}
         </div>
