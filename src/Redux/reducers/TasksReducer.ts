@@ -1,7 +1,7 @@
-import {TasksType} from "../../App";
+
 import {v1} from "uuid";
-import {TaskType} from "../../TodoList";
 import {AddTodoListACType, RemoveTodoListACType, todoListId1, todoListId2} from "./TodoListsReducer";
+import {TasksType, TaskType} from "../../Typification";
 
 type UnionType = RemoveTaskACType
     | AddTaskACType

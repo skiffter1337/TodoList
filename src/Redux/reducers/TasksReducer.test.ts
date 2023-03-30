@@ -1,5 +1,5 @@
-import {TasksType} from "../../App";
 import {addTaskAC, changeTaskStatusAC, removeTaskAC, TasksReducer, updateTaskTitleAC} from "./TasksReducer";
+import {TasksType} from "../../Typification";
 
 test("correct task should be deleted", () => {
     const startState: TasksType = {
