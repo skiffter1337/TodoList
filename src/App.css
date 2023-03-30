@@ -45,8 +45,8 @@
   justify-content: space-around;
 }
 
-/*.input-error {*/
-/*  border: 2px solid #003459;*/
-/*  border-radius: 2px;*/
-/*  outline: none;*/
-/*}*/
+.input-error {
+  border: 2px solid #003459;
+  border-radius: 2px;
+  outline: none;
+}
