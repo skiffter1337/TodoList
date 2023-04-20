@@ -1,4 +1,4 @@
-import React, {ChangeEvent} from 'react';
+import React, {ChangeEvent, memo, useCallback} from 'react';
 import {EditableSpan} from "./Components/EditableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import {DeleteOutlined} from "@material-ui/icons/";
@@ -9,7 +9,7 @@ import {AppRootState} from "./Redux/store/store";
 import {TasksListPropsType, TaskType} from "./Typification";
 
 
-const TasksList = (props: TasksListPropsType) => {
+const TasksList = memo((props: TasksListPropsType) => {
 
     const dispatch = useDispatch()
     const tasks = useSelector<AppRootState, TaskType[]>(state => state.tasks[props.todoListId])
@@ -21,25 +21,25 @@ const TasksList = (props: TasksListPropsType) => {
     if (props.filter === "completed") {
         filteredTasks = tasks.filter(task => task.isDone)
     }
+    const removeTask = useCallback((taskId: string) => dispatch(removeTaskAC(taskId, props.todoListId)), [dispatch])
+    const changeTaskStatus = useCallback((taskId: string, e: ChangeEvent<HTMLInputElement>) => dispatch(changeTaskStatusAC(taskId, e.currentTarget.checked, props.todoListId)), [dispatch])
+    const updateTaskTitle = useCallback((newTitle: string, taskId: string) => dispatch(updateTaskTitleAC(props.todoListId, taskId, newTitle)), [dispatch])
 
     const tasksItems: JSX.Element[] | JSX.Element = tasks.length
         ? filteredTasks.map((task) => {
 
-            const removeTask = () => dispatch(removeTaskAC(task.id, props.todoListId))
-            const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => dispatch(changeTaskStatusAC(task.id, e.currentTarget.checked, props.todoListId))
-            const updateTaskTitle = (newTitle: string) => dispatch(updateTaskTitleAC(props.todoListId, task.id, newTitle))
             return (
                 <li key={task.id}>
                     <Checkbox
                         style={{color: "#003459"}}
-                        onChange={changeTaskStatus}
+                        onChange={(e) => changeTaskStatus(task.id, e)}
                         checked={task.isDone}
                     />
                     <EditableSpan
                         isDone={task.isDone}
                         oldTitle={task.title}
-                        callback={(newTitle) => updateTaskTitle(newTitle)}/>
-                    <IconButton onClick={removeTask}>{<DeleteOutlined/>}</IconButton>
+                        callback={(newTitle) => updateTaskTitle(newTitle, task.id)}/>
+                    <IconButton onClick={() => removeTask(task.id)}>{<DeleteOutlined/>}</IconButton>
                 </li>
             )
         })
@@ -49,6 +49,6 @@ const TasksList = (props: TasksListPropsType) => {
             {tasksItems}
         </ul>
     );
-};
+});
 
 export default TasksList;

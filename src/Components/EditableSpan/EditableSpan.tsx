@@ -1,14 +1,16 @@
-import React, {useState, KeyboardEvent, ChangeEvent} from 'react';
+import React, {useState, KeyboardEvent, ChangeEvent, memo} from 'react';
+import {EditableSpanStory} from "../../stories/EditableSpan.stories";
 
 
-type PropsType = {
+export type EditableSpanType = {
     oldTitle: string
     callback: (newTitle: string) => void
     isDone?: boolean
 }
 
 
-export const EditableSpan = (props: PropsType) => {
+export const EditableSpan = memo((props: EditableSpanType) => {
+
     const [newTitle, setNewTitle] = useState(props.oldTitle)
     const [edit, setEdit] = useState(false)
 
@@ -37,4 +39,4 @@ export const EditableSpan = (props: PropsType) => {
                       autoFocus/>
             : <span className={spanClasses} onDoubleClick={editMode}>{props.oldTitle}</span>
     );
-};
+});
