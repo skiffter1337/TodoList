@@ -1,6 +1,7 @@
 import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
+import {AddBox} from "@material-ui/icons";
 
 export type AddItemFormType = {
     callback: (newTitle: string)=>void
@@ -50,7 +51,7 @@ export const AddItemForm = memo((props: AddItemFormType) => {
                 onClick={addItem}
 
             >
-                +
+               <AddBox/>
             </IconButton>
             {taskMaxLengthMessage}
             {taskErrorMessage}
