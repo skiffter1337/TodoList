@@ -30,7 +30,7 @@ export const CreateTodolist = () => {
 export const DeleteTodolist = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        const todoId = "c542048a-8d09-4da6-b4b2-fe28e3d88e4c"
+        const todoId = "d7fb861f-58f3-401e-a576-04bdebbb322f"
         todoListAPI.deleteTodoList(todoId)
             .then(res => {
                 if(res.data.resultCode === 0) setState('todo deleted')
@@ -43,7 +43,7 @@ export const UpdateTodolistTitle = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
         const todoId = "f614c0d8-a132-4711-b2e7-2900fd166d42"
-        todoListAPI.updateTodoList(todoId, "UPDATED")
+        todoListAPI.updateTodoListTitle(todoId, "UPDATED")
             .then(res => {
                 if(res.data.resultCode === 0) setState('todo UPDATED')
             })
@@ -51,4 +51,20 @@ export const UpdateTodolistTitle = () => {
 
     return <div>{JSON.stringify(state)}</div>
 }
+
+export const UpdateTodoListOrder = () => {
+    const [state, setState] = useState<any>(null)
+    useEffect(() => {
+        const todoId = "a552ce27-59bd-4665-a084-946ad8093a6a"
+        const putAfterItemId = "84fa6946-2d33-403a-8ff3-17bed67798d9"
+        todoListAPI.updateTodoListOrder(todoId, putAfterItemId)
+            .then(res => {
+                if(res.data.resultCode === 0) setState('todo reordered')
+            })
+    }, [])
+
+    return <div>{JSON.stringify(state)}</div>
+}
+
+
 
