@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useState} from 'react'
-import {todoListAPI} from "../api/todoListAPI";
+import {todolistAPI} from "../api/todolistAPI";
 
 export default {
     title: 'API-TODOS'
@@ -8,7 +8,7 @@ export default {
 export const GetTodolists = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        todoListAPI.getTodoLists()
+        todolistAPI.getTodoLists()
             .then(res => {
                 setState(res.data)
             })
@@ -20,7 +20,7 @@ export const CreateTodolist = () => {
     const [state, setState] = useState<any>(null)
 
     const createTodoListHandler = () => {
-        todoListAPI.createTodoList('My first todo')
+        todolistAPI.createTodoList('My first todo')
             .then(res => {
                 setState(res.data)
             })
@@ -33,12 +33,12 @@ export const CreateTodolist = () => {
 }
 export const DeleteTodolist = () => {
     const [state, setState] = useState<any>(null)
-    const [todoId, setTodoId] = useState<string>("")
+    const [todoId, setTodoId] = useState<string>("047dd50f-74ba-46df-af5e-21a47d813080")
 
     const todoIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => setTodoId(e.currentTarget.value)
 
     const deleteTodoListHandler = () => {
-        todoListAPI.deleteTodoList(todoId)
+        todolistAPI.deleteTodoList(todoId)
             .then(res => {
                 if (res.data.resultCode === 0) setState('todo deleted')
             })
@@ -59,7 +59,7 @@ export const UpdateTodolistTitle = () => {
     const todoListTitleIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => setTodoListTitle(e.currentTarget.value)
 
     const updateTodoListTitle = () => {
-        todoListAPI.updateTodoListTitle(todoId, todoListTitle)
+        todolistAPI.updateTodoListTitle(todoId, todoListTitle)
             .then(res => {
                 if (res.data.resultCode === 0) setState('todo UPDATED')
             })
@@ -78,7 +78,7 @@ export const UpdateTodoListOrder = () => {
     useEffect(() => {
         const todoId = "a552ce27-59bd-4665-a084-946ad8093a6a"
         const putAfterItemId = "84fa6946-2d33-403a-8ff3-17bed67798d9"
-        todoListAPI.updateTodoListOrder(todoId, putAfterItemId)
+        todolistAPI.updateTodoListOrder(todoId, putAfterItemId)
             .then(res => {
                 if (res.data.resultCode === 0) setState('todo reordered')
             })

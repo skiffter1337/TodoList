@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react';
+import React, {useCallback} from 'react';
 import './App.css';
 import s from './App.module.css'
 import {TodoList} from "./TodoList";
@@ -15,6 +15,16 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {Box} from "@mui/material";
+import { TaskType } from './api/todolistAPI';
+
+
+
+
+export type TasksType = {
+    [todoListId: string]: TaskType[]
+}
+
+
 
 
 const App = () => {

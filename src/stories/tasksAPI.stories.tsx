@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useState} from 'react'
-import {tasksAPI} from "../api/todoListAPI";
+import {tasksAPI} from "../api/todolistAPI";
 
 export default {
     title: 'API-TASKS'

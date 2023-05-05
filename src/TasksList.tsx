@@ -6,8 +6,14 @@ import Checkbox from "@mui/material/Checkbox";
 import {useDispatch, useSelector} from "react-redux";
 import {changeTaskStatusAC, removeTaskAC, updateTaskTitleAC} from "./Redux/reducers/TasksReducer";
 import {AppRootState} from "./Redux/store/store";
-import {TasksListPropsType, TaskType} from "./Typification";
+import {TaskStatuses, TaskType} from "./api/todolistAPI";
+import {FilteredType} from "./Redux/reducers/TodoListsReducer";
 
+
+export type TasksListPropsType = {
+    todoListId: string
+    filter: FilteredType
+}
 
 const TasksList = memo((props: TasksListPropsType) => {
 
@@ -15,11 +21,12 @@ const TasksList = memo((props: TasksListPropsType) => {
     const tasks = useSelector<AppRootState, TaskType[]>(state => state.tasks[props.todoListId])
 
     let filteredTasks = tasks
+
     if (props.filter === "active") {
-        filteredTasks = tasks.filter(task => !task.isDone)
+        filteredTasks = tasks.filter(task => task.status === TaskStatuses.New)
     }
     if (props.filter === "completed") {
-        filteredTasks = tasks.filter(task => task.isDone)
+        filteredTasks = tasks.filter(task => task.status === TaskStatuses.Completed)
     }
     const removeTask = useCallback((taskId: string) => dispatch(removeTaskAC(taskId, props.todoListId)), [dispatch])
     const changeTaskStatus = useCallback((taskId: string, e: ChangeEvent<HTMLInputElement>) => dispatch(changeTaskStatusAC(taskId, e.currentTarget.checked, props.todoListId)), [dispatch])
@@ -33,10 +40,10 @@ const TasksList = memo((props: TasksListPropsType) => {
                     <Checkbox
                         style={{color: "#003459"}}
                         onChange={(e) => changeTaskStatus(task.id, e)}
-                        checked={task.isDone}
+                        checked={task.status !== TaskStatuses.New}
                     />
                     <EditableSpan
-                        isDone={task.isDone}
+                        status={task.status}
                         oldTitle={task.title}
                         callback={(newTitle) => updateTaskTitle(newTitle, task.id)}/>
                     <IconButton onClick={() => removeTask(task.id)}>{<DeleteOutlined/>}</IconButton>

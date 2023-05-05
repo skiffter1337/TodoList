@@ -1,11 +1,11 @@
 import React, {useState, KeyboardEvent, ChangeEvent, memo} from 'react';
-import {EditableSpanStory} from "../../stories/EditableSpan.stories";
+
 
 
 export type EditableSpanType = {
     oldTitle: string
     callback: (newTitle: string) => void
-    isDone?: boolean
+    status?: number
 }
 
 
@@ -32,7 +32,7 @@ export const EditableSpan = memo((props: EditableSpanType) => {
         updateTitle()
     }
 
-    const spanClasses = `${props.isDone ? "task-is-done" : ""}`
+    const spanClasses = `${props.status ? "task-is-done" : ""}`
 
     return (
         edit ? <input value={newTitle} onChange={onChangeHandler} onKeyDown={onKeyDownHandler} onBlur={editMode}

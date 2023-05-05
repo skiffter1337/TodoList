@@ -7,21 +7,22 @@ import {DeleteOutlined} from "@material-ui/icons/";
 import IconButton from "@mui/material/IconButton";
 import {useDispatch, useSelector} from "react-redux";
 import {addTaskAC} from "./Redux/reducers/TasksReducer";
-import {FilteredType, TodoListType} from "./Typification";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import {AppRootState} from "./Redux/store/store";
 import {
     changeTodoListFilterAC,
-    removeTodoListAC,
+    FilteredType,
+    removeTodoListAC, TodoListDomainType,
     updateTodoListTitleAC
 } from "./Redux/reducers/TodoListsReducer";
 
 
+
 export const TodoList = memo(() => {
     const dispatch = useDispatch()
-    console.log('TodoList')
-    const todolists = useSelector<AppRootState, TodoListType[]>(state => state.todoLists)
+
+    const todolists = useSelector<AppRootState, TodoListDomainType[]>(state => state.todoLists)
 
     const changeFilter = useCallback((value: FilteredType, todoListId: string) => dispatch(changeTodoListFilterAC(value, todoListId)), [dispatch])
     const removeTodoList = useCallback((todoListId: string) => dispatch(removeTodoListAC(todoListId)), [dispatch])
