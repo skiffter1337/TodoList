@@ -81,12 +81,12 @@ export const UpdateTaskTitle = () => {
     const taskTitleInputHandler = (e: ChangeEvent<HTMLInputElement>) => setNewTaskTitle(e.currentTarget.value)
 
     const updateTaskHandler = () => {
-        tasksAPI.updateTaskTitle(todoId, taskId, newTaskTitle)
-            .then(res => {
-                if (res.data.resultCode === 0) {
-                    setState('task title updated')
-                }
-            })
+        // tasksAPI.updateTask(todoId, taskId, newTaskTitle)
+        //     .then(res => {
+        //         if (res.data.resultCode === 0) {
+        //             setState('task title updated')
+        //         }
+        //     })
     }
 
 

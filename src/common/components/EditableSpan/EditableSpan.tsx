@@ -1,11 +1,11 @@
-import React, {useState, KeyboardEvent, ChangeEvent, memo} from 'react';
-
+import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
+import {TaskStatuses} from "../../../api/todolistAPI";
 
 
 export type EditableSpanType = {
     oldTitle: string
     callback: (newTitle: string) => void
-    status?: number
+    status?: TaskStatuses
 }
 
 
@@ -32,7 +32,7 @@ export const EditableSpan = memo((props: EditableSpanType) => {
         updateTitle()
     }
 
-    const spanClasses = `${props.status ? "task-is-done" : ""}`
+    const spanClasses = `${props.status === TaskStatuses.Completed ? "task-is-done" : ""}`
 
     return (
         edit ? <input value={newTitle} onChange={onChangeHandler} onKeyDown={onKeyDownHandler} onBlur={editMode}

@@ -1,33 +1,33 @@
 import React, {memo, useCallback} from "react";
 import TasksList from "./TasksList";
-import {AddItemForm} from "./Components/AddItemForm/AddItemForm";
-import {EditableSpan} from "./Components/EditableSpan/EditableSpan";
+import {AddItemForm} from "./common/components/EditableSpan/AddItemForm/AddItemForm";
+import {EditableSpan} from "./common/components/EditableSpan/EditableSpan";
 import Button from "@mui/material/Button";
 import {DeleteOutlined} from "@material-ui/icons/";
 import IconButton from "@mui/material/IconButton";
-import {useDispatch, useSelector} from "react-redux";
-import {addTaskAC} from "./Redux/reducers/TasksReducer";
+import {useSelector} from "react-redux";
+import {addTaskTC} from "./redux/reducers/TasksReducer";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import {AppRootState} from "./Redux/store/store";
 import {
     changeTodoListFilterAC,
     FilteredType,
-    removeTodoListAC, TodoListDomainType,
-    updateTodoListTitleAC
-} from "./Redux/reducers/TodoListsReducer";
-
+     removeTodoListTC, TodoListDomainType,
+     updateTodoListTitleTC
+} from "./redux/reducers/TodoListsReducer";
+import {AppRootStateType} from "./redux/store/store";
+import {useAppDispatch} from "./hooks/hooks";
 
 
 export const TodoList = memo(() => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
-    const todolists = useSelector<AppRootState, TodoListDomainType[]>(state => state.todoLists)
+    const todolists = useSelector<AppRootStateType, TodoListDomainType[]>(state => state.todoLists)
 
     const changeFilter = useCallback((value: FilteredType, todoListId: string) => dispatch(changeTodoListFilterAC(value, todoListId)), [dispatch])
-    const removeTodoList = useCallback((todoListId: string) => dispatch(removeTodoListAC(todoListId)), [dispatch])
-    const updateTodoListTitle = useCallback((todoListId: string, newTitle: string) => dispatch(updateTodoListTitleAC(todoListId, newTitle)), [dispatch])
-    const addNewTask = useCallback((todoListId: string, newTitle: string) => dispatch(addTaskAC(todoListId, newTitle)), [dispatch])
+    const removeTodoList = useCallback((todoListId: string) => dispatch(removeTodoListTC(todoListId)), [dispatch])
+    const updateTodoListTitle = useCallback((todoListId: string, newTitle: string) => dispatch(updateTodoListTitleTC(todoListId, newTitle)), [dispatch])
+    const addNewTask = useCallback((todoListId: string, newTitle: string) => dispatch(addTaskTC(todoListId, newTitle)), [dispatch])
 
     const mappedTodoLists = todolists.map(tl => {
 
