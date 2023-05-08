@@ -1,13 +1,12 @@
 import {TaskPriorities, tasksAPI, TaskStatuses, TaskType, UpdateTaskModelType} from "../../api/todolistAPI";
-import {Dispatch} from "redux";
 import {TasksType} from "../../App/App";
-import {AppRootStateType} from "../store/store";
+import {AppRootStateType, AppThunkType} from "../store/store";
 import {AddTodoListACType, RemoveTodoListACType} from "./TodoListsReducer";
 
 
 const initialState: TasksType = {}
 
-export const TasksReducer = (state: TasksType = initialState, action: UnionType): TasksType => {
+export const TasksReducer = (state: TasksType = initialState, action: TasksActionType): TasksType => {
     switch (action.type) {
         case "REMOVE-TASK":
             return {...state, [action.payload.todoListId]: state[action.payload.todoListId].filter(t => t.id !== action.payload.taskId)}
@@ -45,21 +44,21 @@ export const updateTaskAC = (todoListId: string, tasksId: string, model: UpdateD
 export const setTasksAC = (todoListId: string, tasks: TaskType[]) => ({type: "SET-TASKS", todoListId, tasks}) as const
 
 
-export const getTasksTC = (todoListId: string) => (dispatch: Dispatch<UnionType>) => {
+export const getTasksTC = (todoListId: string): AppThunkType => (dispatch) => {
     tasksAPI.getTasks(todoListId)
         .then(res => {dispatch(setTasksAC(todoListId, res.data.items))})
 }
-export const deleteTaskTC = (todoListId: string, taskId: string) => (dispatch: Dispatch<UnionType>) => {
+export const deleteTaskTC = (todoListId: string, taskId: string): AppThunkType => (dispatch) => {
     tasksAPI.deleteTask(todoListId, taskId)
         .then(()=> dispatch(removeTaskAC(todoListId, taskId)))
 }
-export const addTaskTC = (todoListId: string, title: string) => (dispatch: Dispatch<UnionType>) => {
+export const addTaskTC = (todoListId: string, title: string): AppThunkType => (dispatch) => {
     tasksAPI.createTask(todoListId, title)
         .then(res => dispatch(addTaskAC(todoListId, res.data.data.item)))
 }
 
-export const updateTaskTC = (todoListId: string, taskId: string, domainModel: UpdateDomainTaskModelType) =>
-    (dispatch: Dispatch<UnionType>, getState: () => AppRootStateType) => {
+export const updateTaskTC = (todoListId: string, taskId: string, domainModel: UpdateDomainTaskModelType): AppThunkType =>
+    (dispatch, getState: () => AppRootStateType) => {
 
         const task = getState().tasks[todoListId].find(t => t.id === taskId)
 
@@ -85,7 +84,7 @@ export const updateTaskTC = (todoListId: string, taskId: string, domainModel: Up
 //types
 
 
-type UnionType = ReturnType<typeof addTaskAC>
+export type TasksActionType = ReturnType<typeof addTaskAC>
     | ReturnType<typeof removeTaskAC>
     | ReturnType<typeof setTasksAC>
     | AddTodoListACType
