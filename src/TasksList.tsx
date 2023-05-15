@@ -3,15 +3,13 @@ import {EditableSpan} from "./common/components/EditableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import {DeleteOutlined} from "@material-ui/icons/";
 import Checkbox from "@mui/material/Checkbox";
-import {useSelector} from "react-redux";
 import {
     deleteTaskTC,
     getTasksTC, updateTaskTC,
-} from "./redux/reducers/TasksReducer";
-import {AppRootStateType} from "./redux/store/store";
+} from "./redux/reducers/tasksReducer";
+import {useAppDispatch, useAppSelector} from "./redux/store/store";
 import {TaskStatuses, TaskType} from "./api/todolistAPI";
-import {FilteredType} from "./redux/reducers/TodoListsReducer";
-import {useAppDispatch} from "./hooks/hooks";
+import {FilteredType} from "./redux/reducers/todoListsReducer";
 
 
 export type TasksListPropsType = {
@@ -22,15 +20,21 @@ export type TasksListPropsType = {
 const TasksList = memo((props: TasksListPropsType) => {
 
     const dispatch = useAppDispatch()
-    const tasks = useSelector<AppRootStateType, TaskType[]>(state => state.tasks[props.todoListId])
+    const tasks = useAppSelector<TaskType[]>(state => state.tasks[props.todoListId])
 
-    useEffect(() => {
-        dispatch(getTasksTC(props.todoListId))
-    }, [])
 
-    let filteredTasks = tasks
-    if (props.filter === "active") filteredTasks = tasks.filter(task => task.status === TaskStatuses.New)
-    if (props.filter === "completed") filteredTasks = tasks.filter(task => task.status === TaskStatuses.Completed)
+    useEffect(() => dispatch(getTasksTC(props.todoListId)), [])
+
+    const taskFilter = () => {
+        return props.filter === "active"
+            ? tasks.filter(task => task.status === TaskStatuses.New)
+            : props.filter === "completed"
+                ? tasks.filter(task => task.status === TaskStatuses.Completed)
+                : tasks
+    }
+    // let filteredTasks = tasks
+    // if (props.filter === "active") filteredTasks = tasks.filter(task => task.status === TaskStatuses.New)
+    // if (props.filter === "completed") filteredTasks = tasks.filter(task => task.status === TaskStatuses.Completed)
 
 
     const removeTask = useCallback((taskId: string) => dispatch(deleteTaskTC(props.todoListId, taskId)), [dispatch])
@@ -43,7 +47,7 @@ const TasksList = memo((props: TasksListPropsType) => {
     const updateTaskTitle = useCallback((title: string, taskId: string) => dispatch(updateTaskTC(props.todoListId, taskId, {title})), [dispatch])
 
     const tasksItems: JSX.Element[] | JSX.Element = tasks?.length
-        ? filteredTasks.map((task) => {
+        ? taskFilter().map((task) => {
 
             return (
                 <li key={task.id}>
@@ -56,7 +60,9 @@ const TasksList = memo((props: TasksListPropsType) => {
                         status={task.status}
                         oldTitle={task.title}
                         callback={(newTitle) => updateTaskTitle(newTitle, task.id)}/>
-                    <IconButton onClick={() => removeTask(task.id)}>{<DeleteOutlined/>}</IconButton>
+                    <IconButton onClick={() => removeTask(task.id)}>
+                        {<DeleteOutlined/>}
+                    </IconButton>
                 </li>
             )
         })

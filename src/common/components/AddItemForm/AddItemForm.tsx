@@ -2,13 +2,18 @@ import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import {AddBox} from "@material-ui/icons";
+import {useAppSelector} from "../../../redux/store/store";
+import {RequestStatusType} from "../../../redux/reducers/appReducer";
 
 export type AddItemFormType = {
     callback: (newTitle: string)=>void
+    disabled?: boolean
 }
 
 
 export const AddItemForm = memo((props: AddItemFormType) => {
+
+
 
     const [title, setTitle] = useState<string>("")
     const [error, setError] = useState<boolean>(false)
@@ -28,7 +33,7 @@ export const AddItemForm = memo((props: AddItemFormType) => {
         setTitle("")
     }
 
-    const maxTaskLength = 15
+    const maxTaskLength = 15 // fix
     const isTaskLengthTooLong = title.length > maxTaskLength
     const inputErrorClasses = error || isTaskLengthTooLong ? "input-error" : ""
     const inputButtonDisabling = title.trim().length === 0 || !title || isTaskLengthTooLong
@@ -45,9 +50,10 @@ export const AddItemForm = memo((props: AddItemFormType) => {
                 id="standard-basic"
                 size="small"
                 label="Enter text"
+                disabled={props.disabled}
             />
             <IconButton
-                disabled={inputButtonDisabling}
+                disabled={inputButtonDisabling || props.disabled}
                 onClick={addItem}
 
             >

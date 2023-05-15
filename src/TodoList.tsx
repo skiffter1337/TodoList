@@ -1,12 +1,12 @@
 import React, {memo, useCallback} from "react";
 import TasksList from "./TasksList";
-import {AddItemForm} from "./common/components/EditableSpan/AddItemForm/AddItemForm";
+import {AddItemForm} from "./common/components/AddItemForm/AddItemForm";
 import {EditableSpan} from "./common/components/EditableSpan/EditableSpan";
 import Button from "@mui/material/Button";
 import {DeleteOutlined} from "@material-ui/icons/";
 import IconButton from "@mui/material/IconButton";
 import {useSelector} from "react-redux";
-import {addTaskTC} from "./redux/reducers/TasksReducer";
+import {addTaskTC} from "./redux/reducers/tasksReducer";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import {
@@ -14,9 +14,8 @@ import {
     FilteredType,
      removeTodoListTC, TodoListDomainType,
      updateTodoListTitleTC
-} from "./redux/reducers/TodoListsReducer";
-import {AppRootStateType} from "./redux/store/store";
-import {useAppDispatch} from "./hooks/hooks";
+} from "./redux/reducers/todoListsReducer";
+import {AppRootStateType, useAppDispatch} from "./redux/store/store";
 
 
 export const TodoList = memo(() => {
@@ -45,9 +44,9 @@ export const TodoList = memo(() => {
                             <EditableSpan
                                 callback={(newTitle) => updateTodoListTitle(tl.id, newTitle)}
                                 oldTitle={tl.title}/>
-                            <IconButton onClick={() => removeTodoList(tl.id)}>{<DeleteOutlined/>}</IconButton>
+                            <IconButton onClick={() => removeTodoList(tl.id)} disabled={tl.entityStatus === 'loading'}>{<DeleteOutlined/>}</IconButton>
                         </h3>
-                        <AddItemForm callback={(newTitle) => addNewTask(tl.id, newTitle)}/>
+                        <AddItemForm callback={(newTitle) => addNewTask(tl.id, newTitle)} disabled={tl.entityStatus === 'loading'}/>
                         <TasksList
                             todoListId={tl.id}
                             filter={tl.filter}
