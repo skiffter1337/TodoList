@@ -10,6 +10,7 @@ import {
 import {useAppDispatch, useAppSelector} from "./redux/store/store";
 import {TaskStatuses, TaskType} from "./api/todolistAPI";
 import {FilteredType} from "./redux/reducers/todoListsReducer";
+import {RequestStatusType} from "./redux/reducers/appReducer";
 
 
 export type TasksListPropsType = {
@@ -21,7 +22,7 @@ const TasksList = memo((props: TasksListPropsType) => {
 
     const dispatch = useAppDispatch()
     const tasks = useAppSelector<TaskType[]>(state => state.tasks[props.todoListId])
-
+const status = useAppSelector<RequestStatusType>(state => state.app.status)
 
     useEffect(() => dispatch(getTasksTC(props.todoListId)), [])
 
@@ -60,7 +61,7 @@ const TasksList = memo((props: TasksListPropsType) => {
                         status={task.status}
                         oldTitle={task.title}
                         callback={(newTitle) => updateTaskTitle(newTitle, task.id)}/>
-                    <IconButton onClick={() => removeTask(task.id)}>
+                    <IconButton onClick={() => removeTask(task.id)} disabled={status === 'loading'}>
                         {<DeleteOutlined/>}
                     </IconButton>
                 </li>

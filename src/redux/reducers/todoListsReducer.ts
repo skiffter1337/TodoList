@@ -1,6 +1,8 @@
 import {todolistAPI, TodoListsType} from "../../api/todolistAPI";
 import {AppDispatchType, AppThunkType} from "../store/store";
 import {RequestStatusType, setRequestStatusAC} from "./appReducer";
+import {handleServerAppError} from "../../ulits/errorHandlers";
+
 
 
 const initialState: TodoListDomainType[] = []
@@ -55,41 +57,60 @@ export const removeTodoListTC = (todoListId: string): AppThunkType => (dispatch:
     dispatch(setRequestStatusAC('loading'))
     dispatch(changeTodoEntityStatusAC(todoListId, 'loading'))
     todolistAPI.deleteTodoList(todoListId)
-        .then(() => {
-            dispatch(removeTodoListAC(todoListId))
-            dispatch(setRequestStatusAC('idle'))
+        .then((res) => {
+            if (res.data.resultCode === 0) {
+                dispatch(removeTodoListAC(todoListId))
+                dispatch(setRequestStatusAC('idle'))
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
+        })
+        .catch(error => {
+            handleServerAppError(error.message, dispatch)
         })
 }
-export const addTodoListTC = (title: string): AppThunkType => (dispatch: AppDispatchType) => {
-    dispatch(setRequestStatusAC('loading'))
-    todolistAPI.createTodoList(title)
-        .then(res => {
-            dispatch(addTodoListAC(res.data.data.item))
-            dispatch(setRequestStatusAC('idle'))
-        })
-}
-export const updateTodoListTitleTC = (todoListId: string, title: string): AppThunkType => (dispatch: AppDispatchType) => {
-    dispatch(setRequestStatusAC('loading'))
-    todolistAPI.updateTodoListTitle(todoListId, title)
-        .then(() => {
-            dispatch(updateTodoListTitleAC(todoListId, title))
-            dispatch(setRequestStatusAC('idle'))
-        })
-
-}
-
+    export const addTodoListTC = (title: string): AppThunkType => (dispatch: AppDispatchType) => {
+        dispatch(setRequestStatusAC('loading'))
+        todolistAPI.createTodoList(title)
+            .then(res => {
+                if (res.data.resultCode === 0) {
+                    dispatch(addTodoListAC(res.data.data.item))
+                    dispatch(setRequestStatusAC('idle'))
+                } else {
+                    handleServerAppError(res.data, dispatch)
+                }
+            })
+            .catch(error => {
+                handleServerAppError(error.message, dispatch)
+            })
+    }
+    export const updateTodoListTitleTC = (todoListId: string, title: string): AppThunkType => (dispatch: AppDispatchType) => {
+        dispatch(setRequestStatusAC('loading'))
+        todolistAPI.updateTodoListTitle(todoListId, title)
+            .then((res) => {
+                if (res.data.resultCode === 0) {
+                    dispatch(updateTodoListTitleAC(todoListId, title))
+                    dispatch(setRequestStatusAC('idle'))
+                } else {
+                    handleServerAppError(res.data, dispatch)
+                }
+            })
+            .catch(error => {
+                handleServerAppError(error.message, dispatch)
+            })
+    }
 
 //types
 
-export type FilteredType = "all" | "active" | "completed"
-export type TodoListDomainType = TodoListsType & { filter: FilteredType, entityStatus: RequestStatusType }
+    export type FilteredType = "all" | "active" | "completed"
+    export type TodoListDomainType = TodoListsType & { filter: FilteredType, entityStatus: RequestStatusType }
 
-export type TodoListsActionType = ReturnType<typeof changeTodoListFilterAC>
-    | RemoveTodoListACType
-    | AddTodoListACType
-    | ReturnType<typeof updateTodoListTitleAC>
-    | ReturnType<typeof setTodoListsAC>
-    | ReturnType<typeof changeTodoEntityStatusAC>
+    export type TodoListsActionType = ReturnType<typeof changeTodoListFilterAC>
+        | RemoveTodoListACType
+        | AddTodoListACType
+        | ReturnType<typeof updateTodoListTitleAC>
+        | ReturnType<typeof setTodoListsAC>
+        | ReturnType<typeof changeTodoEntityStatusAC>
 
-export type RemoveTodoListACType = ReturnType<typeof removeTodoListAC>
-export type AddTodoListACType = ReturnType<typeof addTodoListAC>
+    export type RemoveTodoListACType = ReturnType<typeof removeTodoListAC>
+    export type AddTodoListACType = ReturnType<typeof addTodoListAC>
