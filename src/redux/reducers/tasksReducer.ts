@@ -32,13 +32,6 @@ export const tasksReducer = (state: TasksType = initialState, action: TasksActio
         }
         case "SET-TASKS":
             return {...state, [action.todoListId]: action.tasks}
-        // case "CHANGE-TASK-ENTITY-STATUS":
-        //     return {...state,
-        //         [action.todoListId]: state[action.todoListId].map(t => t.id === action.tasksId ? {
-        //             ...t,
-        //             entityStatus: "idle"
-        //         } : t)
-        //     }
         default:
             return state
     }
@@ -61,10 +54,7 @@ export const setTasksAC = (todoListId: string, tasks: TaskType[]) => ({
     type: "SET-TASKS",
     todoListId, tasks
 } as const)
-// export const changeTaskEntityStatusAC = ( todoListId: string, status: RequestStatusType,  tasksId?: string) => ({
-//     type: "CHANGE-TASK-ENTITY-STATUS",
-//     todoListId, tasksId, status
-// } as const)
+
 
 
 export const getTasksTC = (todoListId: string): AppThunkType => (dispatch: Dispatch) => {
@@ -111,9 +101,14 @@ export const addTaskTC = (todoListId: string, title: string): AppThunkType => (d
 
 export const updateTaskTC = (todoListId: string, taskId: string, domainModel: UpdateDomainTaskModelType): AppThunkType =>
     (dispatch: Dispatch, getState: () => AppRootStateType) => {
+
         dispatch(setRequestStatusAC('loading'))
         const task = getState().tasks[todoListId].find(t => t.id === taskId)
 
+        if(!task) {
+            console.warn('task not found in the state')
+            return
+        }
         if (task) {
             const apiModel: UpdateTaskModelType = {
                 title: task.title,

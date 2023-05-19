@@ -1,16 +1,16 @@
 import React, {ChangeEvent, memo, useCallback, useEffect} from 'react';
-import {EditableSpan} from "./common/components/EditableSpan/EditableSpan";
+import {EditableSpan} from "../common/components/EditableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import {DeleteOutlined} from "@material-ui/icons/";
 import Checkbox from "@mui/material/Checkbox";
 import {
     deleteTaskTC,
     getTasksTC, updateTaskTC,
-} from "./redux/reducers/tasksReducer";
-import {useAppDispatch, useAppSelector} from "./redux/store/store";
-import {TaskStatuses, TaskType} from "./api/todolistAPI";
-import {FilteredType} from "./redux/reducers/todoListsReducer";
-import {RequestStatusType} from "./redux/reducers/appReducer";
+} from "../redux/reducers/tasksReducer";
+import {useAppDispatch, useAppSelector} from "../redux/store/store";
+import {TaskStatuses, TaskType} from "../api/todolistAPI";
+import {FilteredType} from "../redux/reducers/todoListsReducer";
+import {RequestStatusType} from "../redux/reducers/appReducer";
 
 
 export type TasksListPropsType = {
@@ -22,7 +22,7 @@ const TasksList = memo((props: TasksListPropsType) => {
 
     const dispatch = useAppDispatch()
     const tasks = useAppSelector<TaskType[]>(state => state.tasks[props.todoListId])
-const status = useAppSelector<RequestStatusType>(state => state.app.status)
+    const status = useAppSelector<RequestStatusType>(state => state.app.status)
 
     useEffect(() => dispatch(getTasksTC(props.todoListId)), [])
 
@@ -41,6 +41,7 @@ const status = useAppSelector<RequestStatusType>(state => state.app.status)
     const removeTask = useCallback((taskId: string) => dispatch(deleteTaskTC(props.todoListId, taskId)), [dispatch])
 
     const changeTaskStatus = useCallback((taskId: string, e: ChangeEvent<HTMLInputElement>) => {
+
         let status = e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New
         dispatch(updateTaskTC(props.todoListId, taskId, {status}))
     }, [dispatch])
@@ -55,7 +56,7 @@ const status = useAppSelector<RequestStatusType>(state => state.app.status)
                     <Checkbox
                         style={{color: "#003459"}}
                         onChange={(e) => changeTaskStatus(task.id, e)}
-                        checked={task.status === TaskStatuses.New ? false : true}
+                        checked={task.status === TaskStatuses.Completed}
                     />
                     <EditableSpan
                         status={task.status}

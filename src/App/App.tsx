@@ -1,38 +1,50 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import s from './App.module.css'
-import {TodoList} from "../TodoList";
-import {AddItemForm} from "../common/components/AddItemForm/AddItemForm";
+import {TodoList} from "../components/TodoList";
 import Container from '@mui/material/Container';
 import Grid from "@mui/material/Grid";
-import {addTodoListTC, getTodoListsTC} from "../redux/reducers/todoListsReducer";
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import {TaskType} from '../api/todolistAPI';
-import {useAppDispatch, useAppSelector} from "../redux/store/store";
-import {RequestStatusType} from "../redux/reducers/appReducer";
+import {AppRootStateType, useAppDispatch, useAppSelector} from "../redux/store/store";
+import {meTC, RequestStatusType} from "../redux/reducers/appReducer";
 import {ErrorSnackbar} from "../common/ErrorSnackbar/ErrorSnackBar";
-
+import {Navigate, Route, Routes} from "react-router-dom";
+import {Login} from "../components/Login";
+import {useSelector} from "react-redux";
+import CircularProgress from "@mui/material/CircularProgress"
+import {logoutTC} from '../redux/reducers/authReducer';
 
 export type TasksType = {
     [todoListId: string]: TaskType[]
 }
 
 const App = () => {
-
+    const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
     const status = useAppSelector<RequestStatusType>(state => state.app.status)
     const dispatch = useAppDispatch()
-    const addTodoList = useCallback((newTitle: string) => dispatch(addTodoListTC(newTitle)), [dispatch])
+
+    const logout = () => dispatch(logoutTC())
 
     useEffect(() => {
-        dispatch(getTodoListsTC())
+        dispatch(meTC())
     }, [])
+    console.log(isInitialized)
+
+    if (!isInitialized) {
+        return (
+        <div style={{position: 'fixed', width: '100%', textAlign: 'center', top: '30%'}}>
+        <CircularProgress   className={s.CircularProgress}/>
+        </div>
+        )
+    }
 
     const appBarClass = {backgroundColor: "#003459"}
     return (
@@ -47,12 +59,11 @@ const App = () => {
                             aria-label="menu"
                             sx={{mr: 2}}
                         >
-                            <MenuIcon/>
                         </IconButton>
                         <Typography variant="h6" sx={{flexGrow: 1}}>
-                            News
+                            TodoList
                         </Typography>
-                        <Button color="inherit">Login</Button>
+                        {isLoggedIn &&  <Button color="inherit" onClick={logout}>Logout</Button>}
                     </Toolbar>
                     {status === 'loading' && <LinearProgress/>}
                 </AppBar>
@@ -60,11 +71,13 @@ const App = () => {
             </Box>
             <div className={s.todos}>
                 <Container fixed>
-                    <Grid container style={{padding: "20px"}}>
-                        <AddItemForm callback={(newTitle) => addTodoList(newTitle)}/>
-                    </Grid>
                     <Grid container spacing={3}>
-                        <TodoList/>
+                        <Routes>
+                            <Route path={'/'} element={<TodoList/>}/>
+                            <Route path={'/login'} element={<Login/>}/>
+                            <Route path={'/404'} element={<h2>404: Page not found</h2>}/>
+                            <Route path={'*'} element={<Navigate to='/404'/>}/>
+                        </Routes>
                     </Grid>
                 </Container>
             </div>

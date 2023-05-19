@@ -1,5 +1,6 @@
 import axios, {AxiosResponse} from "axios";
 
+
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/',
     withCredentials: true
@@ -39,6 +40,30 @@ export const tasksAPI = {
     updateTaskOrder(todoListId: string, taskId: string, putAfterItemId: string) {
       return instance.put<ResponseType>(`todo-lists/${todoListId}/tasks/${taskId}/reorder`, {putAfterItemId})
     }
+}
+
+
+export const authAPI = {
+  login(data: LoginParamsType) {
+      return instance.post<ResponseType<{userId: number}>>('auth/login', data)
+    },
+    me() {
+      return instance.get<ResponseType<{data: UserType}>>('auth/me')
+    },
+    logout() {
+      return instance.delete<ResponseType>('auth/login')
+    }
+}
+type UserType = {
+    id: number
+    email: string
+    login: string
+}
+
+export type LoginParamsType = {
+    email: string
+    password: string
+    rememberMe: boolean
 }
 export type UpdateTaskModelType = {
     title: string

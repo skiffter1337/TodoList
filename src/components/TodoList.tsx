@@ -1,28 +1,40 @@
-import React, {memo, useCallback} from "react";
+import React, {memo, useCallback, useEffect} from "react";
 import TasksList from "./TasksList";
-import {AddItemForm} from "./common/components/AddItemForm/AddItemForm";
-import {EditableSpan} from "./common/components/EditableSpan/EditableSpan";
+import {AddItemForm} from "../common/components/AddItemForm/AddItemForm";
+import {EditableSpan} from "../common/components/EditableSpan/EditableSpan";
 import Button from "@mui/material/Button";
 import {DeleteOutlined} from "@material-ui/icons/";
 import IconButton from "@mui/material/IconButton";
 import {useSelector} from "react-redux";
-import {addTaskTC} from "./redux/reducers/tasksReducer";
+import {addTaskTC} from "../redux/reducers/tasksReducer";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import {
+    addTodoListTC,
     changeTodoListFilterAC,
-    FilteredType,
-     removeTodoListTC, TodoListDomainType,
-     updateTodoListTitleTC
-} from "./redux/reducers/todoListsReducer";
-import {AppRootStateType, useAppDispatch} from "./redux/store/store";
+    FilteredType, getTodoListsTC,
+    removeTodoListTC, TodoListDomainType,
+    updateTodoListTitleTC
+} from "../redux/reducers/todoListsReducer";
+import {AppRootStateType, useAppDispatch} from "../redux/store/store";
+import {Navigate} from "react-router-dom";
 
 
 export const TodoList = memo(() => {
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            return
+        }
+
+        dispatch(getTodoListsTC())
+    }, [isLoggedIn])
+
     const dispatch = useAppDispatch()
 
     const todolists = useSelector<AppRootStateType, TodoListDomainType[]>(state => state.todoLists)
-
+    const addTodoList = useCallback((newTitle: string) => dispatch(addTodoListTC(newTitle)), [dispatch])
     const changeFilter = useCallback((value: FilteredType, todoListId: string) => dispatch(changeTodoListFilterAC(value, todoListId)), [dispatch])
     const removeTodoList = useCallback((todoListId: string) => dispatch(removeTodoListTC(todoListId)), [dispatch])
     const updateTodoListTitle = useCallback((todoListId: string, newTitle: string) => dispatch(updateTodoListTitleTC(todoListId, newTitle)), [dispatch])
@@ -44,9 +56,11 @@ export const TodoList = memo(() => {
                             <EditableSpan
                                 callback={(newTitle) => updateTodoListTitle(tl.id, newTitle)}
                                 oldTitle={tl.title}/>
-                            <IconButton onClick={() => removeTodoList(tl.id)} disabled={tl.entityStatus === 'loading'}>{<DeleteOutlined/>}</IconButton>
+                            <IconButton onClick={() => removeTodoList(tl.id)} disabled={tl.entityStatus === 'loading'}>{
+                                <DeleteOutlined/>}</IconButton>
                         </h3>
-                        <AddItemForm callback={(newTitle) => addNewTask(tl.id, newTitle)} disabled={tl.entityStatus === 'loading'}/>
+                        <AddItemForm callback={(newTitle) => addNewTask(tl.id, newTitle)}
+                                     disabled={tl.entityStatus === 'loading'}/>
                         <TasksList
                             todoListId={tl.id}
                             filter={tl.filter}
@@ -67,6 +81,15 @@ export const TodoList = memo(() => {
             </Grid>
         );
     })
-    return <> {mappedTodoLists} </>
+    console.log(isLoggedIn)
+
+
+    if (!isLoggedIn) return <Navigate to={'/login'}/>
+    return <>
+        <Grid container style={{margin: "50px"}}>
+            <AddItemForm callback={(newTitle) => addTodoList(newTitle)}/>
+        </Grid>
+        {mappedTodoLists}
+    </>
 });
 
