@@ -45,7 +45,7 @@ export const meTC = () => (dispatch: Dispatch) => {
     authAPI.me()
         .then((res) => {
             if(res.data.resultCode === 0) {
-                dispatch(setIsLoginAC(true))
+                dispatch(setIsLoginAC({value: true}))
                 dispatch(setRequestStatusAC('succeeded'))
             } else {
                 handleServerAppError(res.data, dispatch)
