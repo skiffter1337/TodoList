@@ -25,6 +25,7 @@ export type TasksType = {
     [todoListId: string]: TaskType[]
 }
 
+// Start migration to RTK
 const App = () => {
     const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
     const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
