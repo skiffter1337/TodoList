@@ -35,7 +35,7 @@ export const TodoList = memo(() => {
 
     const todolists = useSelector<AppRootStateType, TodoListDomainType[]>(state => state.todoLists)
     const addTodoList = useCallback((newTitle: string) => dispatch(addTodoListTC(newTitle)), [dispatch])
-    const changeFilter = useCallback((value: FilteredType, todoListId: string) => dispatch(changeTodoListFilterAC(value, todoListId)), [dispatch])
+    const changeFilter = useCallback((filter: FilteredType, todoListId: string) => dispatch(changeTodoListFilterAC({filter, todoListId})), [dispatch])
     const removeTodoList = useCallback((todoListId: string) => dispatch(removeTodoListTC(todoListId)), [dispatch])
     const updateTodoListTitle = useCallback((todoListId: string, newTitle: string) => dispatch(updateTodoListTitleTC(todoListId, newTitle)), [dispatch])
     const addNewTask = useCallback((todoListId: string, newTitle: string) => dispatch(addTaskTC(todoListId, newTitle)), [dispatch])
