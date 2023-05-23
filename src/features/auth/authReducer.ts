@@ -1,37 +1,33 @@
-import {authAPI, LoginParamsType} from "../../api/todolistAPI";
-import {AppThunkType} from "../store/store";
+import {authAPI, LoginParamsType} from "api/todolistAPI";
+import {AppThunkType} from "redux/store/store";
 import {Dispatch} from "redux";
-import {setRequestStatusAC} from "./appReducer";
-import {handlerServerNetworkError, handleServerAppError} from "../../ulits/errorHandlers";
+import {handlerServerNetworkError, handleServerAppError} from "ulits/errorHandlers";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {appActions} from "App/appReducer";
 
 
-
-const initialState = {
-    isLoggedIn: false
-
-
-}
 const slice = createSlice({
     name: "auth",
-    initialState: initialState,
+    initialState: {
+        isLoggedIn: false
+    },
     reducers: {
-        setIsLoginAC(state, action: PayloadAction<{value: boolean}>) {
-            state.isLoggedIn = action.payload.value
+        setIsLogin: (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
+            state.isLoggedIn = action.payload.isLoggedIn
         }
     }
 })
 
 export const authReducer = slice.reducer
-export const setIsLoginAC = slice.actions.setIsLoginAC
+export const authActions = slice.actions
 
 export const loginTC = (data: LoginParamsType): AppThunkType => (dispatch: Dispatch) => {
-    dispatch(setRequestStatusAC({status: 'loading'}))
+    dispatch(appActions.setRequestStatus({status: 'loading'}))
     authAPI.login(data)
         .then((res) => {
             if (res.data.resultCode === 0) {
-                dispatch(setIsLoginAC({value: true}))
-                dispatch(setRequestStatusAC({status:'succeeded'}))
+                dispatch(authActions.setIsLogin({isLoggedIn: true}))
+                dispatch(appActions.setRequestStatus({status: 'succeeded'}))
             } else {
                 handleServerAppError(res.data, dispatch)
             }
@@ -42,12 +38,12 @@ export const loginTC = (data: LoginParamsType): AppThunkType => (dispatch: Dispa
 }
 
 export const logoutTC = (): AppThunkType => (dispatch: Dispatch) => {
-    dispatch(setRequestStatusAC({status: 'loading'}))
+    dispatch(appActions.setRequestStatus({status: 'loading'}))
     authAPI.logout()
         .then((res) => {
             if (res.data.resultCode === 0) {
-                dispatch(setIsLoginAC({value: false}))
-                dispatch(setRequestStatusAC({status:'succeeded'}))
+                dispatch(authActions.setIsLogin({isLoggedIn: false}))
+                dispatch(appActions.setRequestStatus({status: 'succeeded'}))
             } else {
                 handleServerAppError(res.data, dispatch)
             }

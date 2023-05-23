@@ -1,9 +1,9 @@
 import {Dispatch} from "redux";
-import {authAPI} from "../../api/todolistAPI";
-import {handlerServerNetworkError, handleServerAppError} from "../../ulits/errorHandlers";
-import {setIsLoginAC} from "./authReducer";
+import {authAPI} from "api/todolistAPI";
+import {handlerServerNetworkError, handleServerAppError} from "ulits/errorHandlers";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {AppThunkType} from "../store/store";
+import {AppThunkType} from "redux/store/store";
+import {authActions} from "features/auth/authReducer";
 
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
@@ -18,28 +18,28 @@ const slice = createSlice({
     name: "app",
     initialState: initialState,
     reducers: {
-        setRequestStatusAC(state, action: PayloadAction<{status: RequestStatusType}>) {
+        setRequestStatus: (state, action: PayloadAction<{status: RequestStatusType}>) => {
             state.status = action.payload.status
         },
-        setErrorAC(state, action: PayloadAction<{error: string | null}>) {
+        setError: (state, action: PayloadAction<{error: string | null}>) => {
             state.error = action.payload.error
         },
-        setInitializedAC(state, action: PayloadAction<{isInitialized: boolean}>) {
+        setInitialized: (state, action: PayloadAction<{isInitialized: boolean}>) => {
             state.isInitialized = action.payload.isInitialized
         }
     }
 })
 
 export const appReducer = slice.reducer;
-export const {setRequestStatusAC, setErrorAC, setInitializedAC} = slice.actions
+export const appActions = slice.actions
 
 export const meTC = (): AppThunkType => (dispatch: Dispatch) => {
-    dispatch(setRequestStatusAC({status: 'loading'}))
+    dispatch(appActions.setRequestStatus({status: 'loading'}))
     authAPI.me()
         .then((res) => {
             if(res.data.resultCode === 0) {
-                dispatch(setIsLoginAC({value: true}))
-                dispatch(setRequestStatusAC({status: 'succeeded'}))
+                dispatch(authActions.setIsLogin({isLoggedIn: true}))
+                dispatch(appActions.setRequestStatus({status: 'succeeded'}))
             } else {
                 handleServerAppError(res.data, dispatch)
             }
@@ -47,5 +47,5 @@ export const meTC = (): AppThunkType => (dispatch: Dispatch) => {
         .catch(error => {
             handlerServerNetworkError(error.message, dispatch)
         })
-        .finally(() => dispatch(setInitializedAC({isInitialized: true})))
+        .finally(() => dispatch(appActions.setInitialized({isInitialized: true})))
 }

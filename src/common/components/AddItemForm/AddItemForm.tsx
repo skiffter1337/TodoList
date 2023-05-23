@@ -2,8 +2,6 @@ import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import {AddBox} from "@material-ui/icons";
-import {useAppSelector} from "../../../redux/store/store";
-import {RequestStatusType} from "../../../redux/reducers/appReducer";
 
 export type AddItemFormType = {
     callback: (newTitle: string)=>void

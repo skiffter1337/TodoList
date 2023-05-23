@@ -1,16 +1,16 @@
 import React, {ChangeEvent, memo, useCallback, useEffect} from 'react';
-import {EditableSpan} from "../common/components/EditableSpan/EditableSpan";
+import {EditableSpan} from "common/components/EditableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import {DeleteOutlined} from "@material-ui/icons/";
 import Checkbox from "@mui/material/Checkbox";
 import {
     deleteTaskTC,
     getTasksTC, updateTaskTC,
-} from "../redux/reducers/tasksReducer";
-import {useAppDispatch, useAppSelector} from "../redux/store/store";
-import {TaskStatuses, TaskType} from "../api/todolistAPI";
-import {FilteredType} from "../redux/reducers/todoListsReducer";
-import {RequestStatusType} from "../redux/reducers/appReducer";
+} from "features/TodoList/tasksReducer";
+import {useAppDispatch, useAppSelector} from "redux/store/store";
+import {TaskStatuses, TaskType} from "api/todolistAPI";
+import {FilteredType} from "features/TodoList/todoListsReducer";
+import {RequestStatusType} from "App/appReducer";
 
 
 export type TasksListPropsType = {

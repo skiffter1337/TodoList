@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import './App.css';
 import s from './App.module.css'
-import {TodoList} from "../components/TodoList";
+import {TodoList} from "features/TodoList/TodoList";
 import Container from '@mui/material/Container';
 import Grid from "@mui/material/Grid";
 import AppBar from '@mui/material/AppBar';
@@ -11,15 +11,16 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
-import {TaskType} from '../api/todolistAPI';
-import {AppRootStateType, useAppDispatch, useAppSelector} from "../redux/store/store";
-import {meTC, RequestStatusType} from "../redux/reducers/appReducer";
-import {ErrorSnackbar} from "../common/ErrorSnackbar/ErrorSnackBar";
+import {TaskType} from 'api/todolistAPI';
+import {AppRootStateType, useAppDispatch, useAppSelector} from "redux/store/store";
+import {meTC, RequestStatusType} from "App/appReducer";
+import {ErrorSnackbar} from "common/ErrorSnackbar/ErrorSnackBar";
 import {Navigate, Route, Routes} from "react-router-dom";
-import {Login} from "../components/Login";
+import {Auth} from "features/auth/Auth";
 import {useSelector} from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress"
-import {logoutTC} from '../redux/reducers/authReducer';
+import {logoutTC} from 'features/auth/authReducer';
+import {selectIsLoggedIn} from "features/auth/auth.reducer";
 
 export type TasksType = {
     [todoListId: string]: TaskType[]
@@ -28,7 +29,7 @@ export type TasksType = {
 // Start migration to RTK
 const App = () => {
     const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
-    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
+    const isLoggedIn = useSelector(selectIsLoggedIn)
     const status = useAppSelector<RequestStatusType>(state => state.app.status)
     const dispatch = useAppDispatch()
 
@@ -75,7 +76,7 @@ const App = () => {
                     <Grid container spacing={3}>
                         <Routes>
                             <Route path={'/'} element={<TodoList/>}/>
-                            <Route path={'/login'} element={<Login/>}/>
+                            <Route path={'/login'} element={<Auth/>}/>
                             <Route path={'/404'} element={<h2>404: Page not found</h2>}/>
                             <Route path={'*'} element={<Navigate to='/404'/>}/>
                         </Routes>
