@@ -1,6 +1,6 @@
-import {ResponseType} from "api/todolistAPI";
-import {AppDispatchType} from "redux/store/store";
-import {appActions} from "App/appReducer";
+import {ResponseType} from "../types/common.types";
+import {AppDispatchType} from "App/store/store";
+import {appActions} from "App/app.reducer";
 
 
 export const handleServerAppError  = <T>(data: ResponseType<T>, dispatch: AppDispatchType) => {
@@ -12,19 +12,3 @@ export const handleServerAppError  = <T>(data: ResponseType<T>, dispatch: AppDis
     dispatch(appActions.setRequestStatus({status: 'failed'}))
 }
 
-
-// export const handlerServerNetworkError = (e: unknown, dispatch: Dispatch) => {
-//     const err = e as Error | AxiosError<{ error: string }>
-//     if (axios.isAxiosError(err)) {
-//         const error = err.message ? err.message : 'Some error occurred'
-//         dispatch(appActions.setError({error}))
-//     } else {
-//         dispatch(appActions.setError({error: `Native error ${err.message}`}))
-//     }
-//     dispatch(appActions.setRequestStatus({status: 'failed'}))
-// }
-//
-//
-//
-//
-//

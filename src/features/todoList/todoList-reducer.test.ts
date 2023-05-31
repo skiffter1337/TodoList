@@ -1,4 +1,4 @@
-import {todoListActions, TodoListDomainType, todoListsReducer} from "./todoListsReducer";
+import {todoListActions, TodoListDomainType, todoListsReducer} from "./todoLists.reducer";
 import {v1} from "uuid";
 
 let todoListId1: string

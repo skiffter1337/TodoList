@@ -1,9 +1,10 @@
-import {ResultCode, todolistAPI, TodoListsType} from "api/todolistAPI";
-import {AppDispatchType, AppThunkType} from "redux/store/store";
-import {appActions, RequestStatusType} from "App/appReducer";
-import {handleServerAppError} from "common/ulits/handle-server-app-error";
+import {AppDispatchType, AppThunkType} from "App/store/store";
+import {appActions, RequestStatusType} from "App/app.reducer";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {clearTasksAndTodoLists} from "../../common/actions/commonActions";
+import {handleServerAppError} from "../../common/ulits";
+import { ResultCode } from "common/enums/enums";
+import {todoListsAPI, TodoListsType} from "./todoLists.api";
 
 
 const initialState: TodoListDomainType[] = []
@@ -49,7 +50,7 @@ export const todoListActions = slice.actions
 
 export const getTodoListsTC = (): AppThunkType => (dispatch: AppDispatchType) => {
     dispatch(appActions.setRequestStatus({status: 'loading'}))
-    todolistAPI.getTodoLists()
+    todoListsAPI.getTodoLists()
         .then(res => {
             dispatch(todoListActions.setTodoLists({todoLists: res.data}))
             dispatch(appActions.setRequestStatus({status: 'succeeded'}))
@@ -58,7 +59,7 @@ export const getTodoListsTC = (): AppThunkType => (dispatch: AppDispatchType) =>
 export const removeTodoListTC = (todoListId: string): AppThunkType => (dispatch: AppDispatchType) => {
     dispatch(appActions.setRequestStatus({status: 'loading'}))
     dispatch(todoListActions.changeTodoEntityStatus({todoListId, status: 'loading'}))
-    todolistAPI.deleteTodoList(todoListId)
+    todoListsAPI.deleteTodoList(todoListId)
         .then((res) => {
             if (res.data.resultCode === ResultCode.Success) {
                 dispatch(todoListActions.removeTodoList({todoListId}))
@@ -73,7 +74,7 @@ export const removeTodoListTC = (todoListId: string): AppThunkType => (dispatch:
 }
 export const addTodoListTC = (title: string): AppThunkType => (dispatch: AppDispatchType) => {
     dispatch(appActions.setRequestStatus({status: 'loading'}))
-    todolistAPI.createTodoList(title)
+    todoListsAPI.createTodoList(title)
         .then(res => {
             if (res.data.resultCode === ResultCode.Success) {
                 dispatch(todoListActions.addTodoList({todoList: res.data.data.item}))
@@ -88,7 +89,7 @@ export const addTodoListTC = (title: string): AppThunkType => (dispatch: AppDisp
 }
 export const updateTodoListTitleTC = (todoListId: string, title: string): AppThunkType => (dispatch: AppDispatchType) => {
     dispatch(appActions.setRequestStatus({status: 'loading'}))
-    todolistAPI.updateTodoListTitle(todoListId, title)
+    todoListsAPI.updateTodoListTitle(todoListId, title)
         .then((res) => {
             if (res.data.resultCode === ResultCode.Success) {
                 dispatch(todoListActions.updateTodoListTitle({todoListId, title}))

@@ -1,7 +1,6 @@
 import React, {memo, useCallback, useEffect} from "react";
-import TasksList from "features/TodoList/TasksList";
-import {AddItemForm} from "common/components/AddItemForm/AddItemForm";
-import {EditableSpan} from "common/components/EditableSpan/EditableSpan";
+import TasksList from "features/todoList/TasksList";
+
 import Button from "@mui/material/Button";
 import {DeleteOutlined} from "@material-ui/icons/";
 import IconButton from "@mui/material/IconButton";
@@ -13,11 +12,12 @@ import {
     FilteredType, getTodoListsTC,
     removeTodoListTC, todoListActions, TodoListDomainType,
     updateTodoListTitleTC
-} from "features/TodoList/todoListsReducer";
-import {AppRootStateType, useAppDispatch} from "redux/store/store";
+} from "features/todoList/todoLists.reducer";
+import {AppRootStateType, useAppDispatch} from "App/store/store";
 import {Navigate} from "react-router-dom";
 import {selectIsLoggedIn} from "features/auth/auth.selector";
-import {tasksThunks} from "./tasksReducer";
+import {tasksThunks} from "./tasks.reducer";
+import {AddItemForm, EditableSpan} from "../../common/components";
 
 
 export const TodoList = memo(() => {
@@ -30,7 +30,6 @@ export const TodoList = memo(() => {
 
         dispatch(getTodoListsTC())
     }, [isLoggedIn])
-
     const dispatch = useAppDispatch()
 
     const todoLists = useSelector<AppRootStateType, TodoListDomainType[]>(state => state.todoLists)

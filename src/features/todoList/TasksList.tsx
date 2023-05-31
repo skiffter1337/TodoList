@@ -3,10 +3,12 @@ import {EditableSpan} from "common/components/EditableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import {DeleteOutlined} from "@material-ui/icons/";
 import Checkbox from "@mui/material/Checkbox";
-import {tasksThunks,} from "features/TodoList/tasksReducer";
-import {useAppDispatch, useAppSelector} from "redux/store/store";
-import {TaskStatuses, TaskType} from "api/todolistAPI";
-import {FilteredType} from "features/TodoList/todoListsReducer";
+import {tasksThunks,} from "features/todoList/tasks.reducer";
+import {useAppDispatch, useAppSelector} from "App/store/store";
+import {FilteredType} from "features/todoList/todoLists.reducer";
+import {TaskStatuses} from "../../common/enums";
+import {TaskType} from "./todoLists.api";
+
 
 
 export type TasksListPropsType = {

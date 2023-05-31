@@ -1,7 +1,7 @@
+import {TaskPriorities, TaskStatuses } from "common/enums/enums";
 import {TasksType} from "../../App/App";
-import {TaskPriorities, TaskStatuses} from "../../api/todolistAPI";
-import {tasksReducer, tasksThunks} from "./tasksReducer";
-import {todoListActions} from "./todoListsReducer";
+import {tasksReducer, tasksThunks} from "./tasks.reducer";
+import {todoListActions} from "./todoLists.reducer";
 
 
 let startState: TasksType = {}

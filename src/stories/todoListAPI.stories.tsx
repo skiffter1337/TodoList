@@ -1,5 +1,7 @@
 import React, {ChangeEvent, useEffect, useState} from 'react'
-import {todolistAPI} from "../api/todolistAPI";
+import {todoListsAPI} from "../features/todoList/todoLists.api";
+
+
 
 export default {
     title: 'API-TODOS'
@@ -8,7 +10,7 @@ export default {
 export const GetTodolists = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        todolistAPI.getTodoLists()
+        todoListsAPI.getTodoLists()
             .then(res => {
                 setState(res.data)
             })
@@ -20,7 +22,7 @@ export const CreateTodolist = () => {
     const [state, setState] = useState<any>(null)
 
     const createTodoListHandler = () => {
-        todolistAPI.createTodoList('My first todo')
+        todoListsAPI.createTodoList('My first todo')
             .then(res => {
                 setState(res.data)
             })
@@ -38,7 +40,7 @@ export const DeleteTodolist = () => {
     const todoIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => setTodoId(e.currentTarget.value)
 
     const deleteTodoListHandler = () => {
-        todolistAPI.deleteTodoList(todoId)
+        todoListsAPI.deleteTodoList(todoId)
             .then(res => {
                 if (res.data.resultCode === 0) setState('todo deleted')
             })
@@ -59,7 +61,7 @@ export const UpdateTodolistTitle = () => {
     const todoListTitleIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => setTodoListTitle(e.currentTarget.value)
 
     const updateTodoListTitle = () => {
-        todolistAPI.updateTodoListTitle(todoId, todoListTitle)
+        todoListsAPI.updateTodoListTitle(todoId, todoListTitle)
             .then(res => {
                 if (res.data.resultCode === 0) setState('todo UPDATED')
             })
@@ -78,7 +80,7 @@ export const UpdateTodoListOrder = () => {
     useEffect(() => {
         const todoId = "a552ce27-59bd-4665-a084-946ad8093a6a"
         const putAfterItemId = "84fa6946-2d33-403a-8ff3-17bed67798d9"
-        todolistAPI.updateTodoListOrder(todoId, putAfterItemId)
+        todoListsAPI.updateTodoListOrder(todoId, putAfterItemId)
             .then(res => {
                 if (res.data.resultCode === 0) setState('todo reordered')
             })

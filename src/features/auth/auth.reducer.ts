@@ -1,11 +1,12 @@
-import {authAPI, LoginParamsType, ResultCode} from "api/todolistAPI";
-import {AppThunkType} from "redux/store/store";
+import {AppThunkType} from "App/store/store";
 import {Dispatch} from "redux";
 import {handleServerAppError} from "common/ulits/handle-server-app-error";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {appActions} from "App/appReducer";
+import {appActions} from "App/app.reducer";
 import {clearTasksAndTodoLists} from "../../common/actions/commonActions";
-import {handlerServerNetworkError} from "../../common/ulits/handle-server-network-error";
+import {handlerServerNetworkError} from "../../common/ulits";
+import {authAPI, LoginParamsType} from "./auth.api";
+import {ResultCode} from "../../common/enums";
 
 
 

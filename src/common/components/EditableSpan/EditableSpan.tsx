@@ -1,5 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
-import {TaskStatuses} from "../../../api/todolistAPI";
+import {TaskStatuses} from "../../enums";
+
 
 
 export type EditableSpanType = {

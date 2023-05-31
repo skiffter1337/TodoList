@@ -1,10 +1,11 @@
 import {Dispatch} from "redux";
-import {authAPI, ResultCode} from "api/todolistAPI";
 import {handleServerAppError} from "common/ulits/handle-server-app-error";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {AppThunkType} from "redux/store/store";
-import {authActions} from "features/auth/authReducer";
-import {handlerServerNetworkError} from "../common/ulits/handle-server-network-error";
+import {AppThunkType} from "App/store/store";
+import {authActions} from "features/auth/auth.reducer";
+import {handlerServerNetworkError} from "../common/ulits";
+import {authAPI} from "../features/auth/auth.api";
+import {ResultCode} from "../common/enums";
 
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'

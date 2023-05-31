@@ -1,20 +1,14 @@
-import {
-    AddTaskArgsType,
-    DeleteTaskArgsType,
-    ResultCode,
-    TaskPriorities,
-    tasksAPI,
-    TaskStatuses,
-    TaskType,
-} from "api/todolistAPI";
 import {TasksType} from "App/App";
-import {handleServerAppError} from "common/ulits/handle-server-app-error";
+
 import {createSlice} from "@reduxjs/toolkit";
-import {appActions} from "App/appReducer";
-import {todoListActions} from "features/TodoList/todoListsReducer";
+import {appActions} from "App/app.reducer";
+import {todoListActions} from "features/todoList/todoLists.reducer";
 import {clearTasksAndTodoLists} from "../../common/actions/commonActions";
-import {createAppAsyncThunk} from "../../common/ulits/create-app-async-thunk";
-import {handlerServerNetworkError} from "../../common/ulits/handle-server-network-error";
+import {createAppAsyncThunk, handlerServerNetworkError, handleServerAppError} from "../../common/ulits";
+import {ResultCode, TaskPriorities, TaskStatuses} from "../../common/enums";
+import {AddTaskArgsType, DeleteTaskArgsType, tasksAPI, TaskType, UpdateTaskArgsType} from "./todoLists.api";
+
+
 
 
 const initialState: TasksType = {}
@@ -85,30 +79,6 @@ const deleteTask = createAppAsyncThunk<{
     }
 })
 
-export type UpdateDomainTaskModelType = {
-    title?: string
-    description?: string
-    completed?: boolean
-    status?: TaskStatuses
-    priority?: TaskPriorities
-    startDate?: string
-    deadline?: string
-}
-
-export type UpdateTaskModelType = {
-    title: string
-    description: string
-    completed: boolean
-    status: TaskStatuses
-    priority: TaskPriorities
-    startDate: string
-    deadline: string
-}
-export type UpdateTaskArgsType = {
-    todoListId: string
-    taskId: string
-    domainModel: UpdateDomainTaskModelType
-}
 
 const updateTask = createAppAsyncThunk<UpdateTaskArgsType, UpdateTaskArgsType>
 ('tasks/updateTask', async (arg, thunkAPI) => {
@@ -199,3 +169,12 @@ export const tasksThunks = {getTasks, addTask, deleteTask, updateTask}
 //types
 
 
+export type UpdateTaskModelType = {
+    title: string
+    description: string
+    completed: boolean
+    status: TaskStatuses
+    priority: TaskPriorities
+    startDate: string
+    deadline: string
+}

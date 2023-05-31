@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import './App.css';
 import s from './App.module.css'
-import {TodoList} from "features/TodoList/TodoList";
+import {TodoList} from "features/todoList/TodoList";
 import Container from '@mui/material/Container';
 import Grid from "@mui/material/Grid";
 import AppBar from '@mui/material/AppBar';
@@ -11,17 +11,17 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
-import {TaskType} from 'api/todolistAPI';
-import {useAppDispatch} from "redux/store/store";
-import {meTC} from "App/appReducer";
-import {ErrorSnackbar} from "common/components/ErrorSnackbar/ErrorSnackBar";
+import {useAppDispatch} from "App/store/store";
+import {meTC} from "App/app.reducer";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {Auth} from "features/auth/Auth";
 import {useSelector} from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress"
-import {logoutTC} from 'features/auth/authReducer';
+import {logoutTC} from 'features/auth/auth.reducer';
 import {selectIsLoggedIn} from "features/auth/auth.selector";
 import {selectIsInitialized, selectStatus} from "./app.selector";
+import {ErrorSnackbar} from "../common/components";
+import {TaskType} from "../features/todoList/todoLists.api";
 
 export type TasksType = {
     [todoListId: string]: TaskType[]
