@@ -6,7 +6,6 @@ import Button from "@mui/material/Button";
 import {DeleteOutlined} from "@material-ui/icons/";
 import IconButton from "@mui/material/IconButton";
 import {useSelector} from "react-redux";
-import {addTaskTC} from "features/TodoList/tasksReducer";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import {
@@ -17,7 +16,8 @@ import {
 } from "features/TodoList/todoListsReducer";
 import {AppRootStateType, useAppDispatch} from "redux/store/store";
 import {Navigate} from "react-router-dom";
-import {selectIsLoggedIn} from "features/auth/auth.reducer";
+import {selectIsLoggedIn} from "features/auth/auth.selector";
+import {tasksThunks} from "./tasksReducer";
 
 
 export const TodoList = memo(() => {
@@ -33,14 +33,14 @@ export const TodoList = memo(() => {
 
     const dispatch = useAppDispatch()
 
-    const todolists = useSelector<AppRootStateType, TodoListDomainType[]>(state => state.todoLists)
+    const todoLists = useSelector<AppRootStateType, TodoListDomainType[]>(state => state.todoLists)
     const addTodoList = useCallback((newTitle: string) => dispatch(addTodoListTC(newTitle)), [dispatch])
     const changeFilter = useCallback((filter: FilteredType, todoListId: string) => dispatch(todoListActions.changeTodoListFilter({filter, todoListId})), [dispatch])
     const removeTodoList = useCallback((todoListId: string) => dispatch(removeTodoListTC(todoListId)), [dispatch])
     const updateTodoListTitle = useCallback((todoListId: string, newTitle: string) => dispatch(updateTodoListTitleTC(todoListId, newTitle)), [dispatch])
-    const addNewTask = useCallback((todoListId: string, newTitle: string) => dispatch(addTaskTC(todoListId, newTitle)), [dispatch])
+    const addNewTask = useCallback((todoListId: string, title: string) => dispatch(tasksThunks.addTask({todoListId, title})), [dispatch])
 
-    const mappedTodoLists = todolists.map(tl => {
+    const mappedTodoLists = todoLists.map(tl => {
 
         const activeFilterButtonsStyles = {backgroundColor: "#003459", color: "white"}
         const unActiveFilterButtonsStyles = {backgroundColor: "white", color: "#003459", border: "1px solid #003459"}

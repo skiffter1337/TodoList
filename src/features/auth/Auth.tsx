@@ -12,7 +12,7 @@ import {useAppDispatch} from "redux/store/store";
 import {loginTC} from "features/auth/authReducer";
 import {useSelector} from "react-redux";
 import {Navigate} from "react-router-dom";
-import {selectIsLoggedIn} from "features/auth/auth.reducer";
+import {selectIsLoggedIn} from "features/auth/auth.selector";
 
 type FormikErrorsType = {
     email?: string

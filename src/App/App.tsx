@@ -12,15 +12,16 @@ import IconButton from '@mui/material/IconButton';
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import {TaskType} from 'api/todolistAPI';
-import {AppRootStateType, useAppDispatch, useAppSelector} from "redux/store/store";
-import {meTC, RequestStatusType} from "App/appReducer";
-import {ErrorSnackbar} from "common/ErrorSnackbar/ErrorSnackBar";
+import {useAppDispatch} from "redux/store/store";
+import {meTC} from "App/appReducer";
+import {ErrorSnackbar} from "common/components/ErrorSnackbar/ErrorSnackBar";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {Auth} from "features/auth/Auth";
 import {useSelector} from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress"
 import {logoutTC} from 'features/auth/authReducer';
-import {selectIsLoggedIn} from "features/auth/auth.reducer";
+import {selectIsLoggedIn} from "features/auth/auth.selector";
+import {selectIsInitialized, selectStatus} from "./app.selector";
 
 export type TasksType = {
     [todoListId: string]: TaskType[]
@@ -28,9 +29,9 @@ export type TasksType = {
 
 // Start migration to RTK
 const App = () => {
-    const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
+    const isInitialized = useSelector(selectIsInitialized)
     const isLoggedIn = useSelector(selectIsLoggedIn)
-    const status = useAppSelector<RequestStatusType>(state => state.app.status)
+    const status = useSelector(selectStatus)
     const dispatch = useAppDispatch()
 
     const logout = () => dispatch(logoutTC())

@@ -1,4 +1,5 @@
 import axios, {AxiosResponse} from "axios";
+import {UpdateTaskModelType} from "../features/TodoList/tasksReducer";
 
 
 const instance = axios.create({
@@ -28,14 +29,14 @@ export const tasksAPI = {
     getTasks(todoListId: string, count: number = 10, page: number = 1) {
         return instance.get<GetTasksType>(`todo-lists/${todoListId}/tasks?count=${count}&page=${page}`)
     },
-    createTask(todoListId: string, title: string) {
-        return instance.post<ResponseType<{item: TaskType}>>(`todo-lists/${todoListId}/tasks`, {title})
+    createTask(arg: AddTaskArgsType) {
+        return instance.post<ResponseType<{item: TaskType}>>(`todo-lists/${arg.todoListId}/tasks`, {title: arg.title})
     },
-    deleteTask(todoListId: string, taskId: string) {
-        return instance.delete<ResponseType>(`todo-lists/${todoListId}/tasks/${taskId}`)
+    deleteTask(arg: DeleteTaskArgsType) {
+        return instance.delete<ResponseType>(`todo-lists/${arg.todoListId}/tasks/${arg.taskId}`)
     },
-    updateTask(todoListId: string, taskId: string, model: UpdateTaskModelType) {
-        return instance.put<ResponseType<{item: TaskType}>, AxiosResponse<ResponseType<{ item: TaskType }>>, UpdateTaskModelType>(`todo-lists/${todoListId}/tasks/${taskId}`, model)
+    updateTask(todoListId: string, taskId: string, domainModel: UpdateTaskModelType) {
+        return instance.put<ResponseType<{item: TaskType}>, AxiosResponse<ResponseType<{ item: TaskType }>>, UpdateTaskModelType>(`todo-lists/${todoListId}/tasks/${taskId}`, domainModel)
     },
     updateTaskOrder(todoListId: string, taskId: string, putAfterItemId: string) {
       return instance.put<ResponseType>(`todo-lists/${todoListId}/tasks/${taskId}/reorder`, {putAfterItemId})
@@ -65,15 +66,7 @@ export type LoginParamsType = {
     password: string
     rememberMe: boolean
 }
-export type UpdateTaskModelType = {
-    title: string
-    description: string
-    completed: boolean
-    status: TaskStatuses
-    priority: TaskPriorities
-    startDate: string
-    deadline: string
-}
+
 export enum TaskStatuses {
     New = 0,
     InProgress = 1,
@@ -87,6 +80,12 @@ export enum TaskPriorities  {
     Hi = 2,
     Urgently = 3,
     Later = 4
+}
+
+export const ResultCode = {
+    Success: 0,
+    Error: 1,
+    Captcha: 10
 }
 
 export type TodoListsType = {
@@ -123,3 +122,5 @@ export type ResponseType<T = {}> = {
     data: T
 }
 
+export type AddTaskArgsType = {todoListId: string, title: string }
+export type DeleteTaskArgsType= {todoListId: string, taskId: string}

@@ -1,12 +1,14 @@
 import {Dispatch} from "redux";
-import {authAPI} from "api/todolistAPI";
-import {handlerServerNetworkError, handleServerAppError} from "ulits/errorHandlers";
+import {authAPI, ResultCode} from "api/todolistAPI";
+import {handleServerAppError} from "common/ulits/handle-server-app-error";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {AppThunkType} from "redux/store/store";
 import {authActions} from "features/auth/authReducer";
+import {handlerServerNetworkError} from "../common/ulits/handle-server-network-error";
 
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
+export type AppInitialStateType = typeof initialState
 
 const initialState = {
     status: 'loading' as RequestStatusType,
@@ -37,7 +39,7 @@ export const meTC = (): AppThunkType => (dispatch: Dispatch) => {
     dispatch(appActions.setRequestStatus({status: 'loading'}))
     authAPI.me()
         .then((res) => {
-            if(res.data.resultCode === 0) {
+            if(res.data.resultCode === ResultCode.Success) {
                 dispatch(authActions.setIsLogin({isLoggedIn: true}))
                 dispatch(appActions.setRequestStatus({status: 'succeeded'}))
             } else {

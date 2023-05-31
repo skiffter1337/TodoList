@@ -1,8 +1,9 @@
-import {todolistAPI, TodoListsType} from "api/todolistAPI";
+import {ResultCode, todolistAPI, TodoListsType} from "api/todolistAPI";
 import {AppDispatchType, AppThunkType} from "redux/store/store";
 import {appActions, RequestStatusType} from "App/appReducer";
-import {handleServerAppError} from "ulits/errorHandlers";
+import {handleServerAppError} from "common/ulits/handle-server-app-error";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {clearTasksAndTodoLists} from "../../common/actions/commonActions";
 
 
 const initialState: TodoListDomainType[] = []
@@ -33,8 +34,15 @@ const slice = createSlice({
         changeTodoEntityStatus: (state, action: PayloadAction<{ todoListId: string, status: RequestStatusType }>) => {
             const index = state.findIndex(todo => todo.id === action.payload.todoListId)
             if (index !== -1) state[index].entityStatus = action.payload.status
-        }
+        },
     },
+    extraReducers: builder => {
+
+        builder
+            .addCase(clearTasksAndTodoLists, () => {
+                return []
+            })
+    }
 })
 export const todoListsReducer = slice.reducer;
 export const todoListActions = slice.actions
@@ -52,7 +60,7 @@ export const removeTodoListTC = (todoListId: string): AppThunkType => (dispatch:
     dispatch(todoListActions.changeTodoEntityStatus({todoListId, status: 'loading'}))
     todolistAPI.deleteTodoList(todoListId)
         .then((res) => {
-            if (res.data.resultCode === 0) {
+            if (res.data.resultCode === ResultCode.Success) {
                 dispatch(todoListActions.removeTodoList({todoListId}))
                 dispatch(appActions.setRequestStatus({status: 'succeeded'}))
             } else {
@@ -67,7 +75,7 @@ export const addTodoListTC = (title: string): AppThunkType => (dispatch: AppDisp
     dispatch(appActions.setRequestStatus({status: 'loading'}))
     todolistAPI.createTodoList(title)
         .then(res => {
-            if (res.data.resultCode === 0) {
+            if (res.data.resultCode === ResultCode.Success) {
                 dispatch(todoListActions.addTodoList({todoList: res.data.data.item}))
                 dispatch(appActions.setRequestStatus({status: 'succeeded'}))
             } else {
@@ -82,7 +90,7 @@ export const updateTodoListTitleTC = (todoListId: string, title: string): AppThu
     dispatch(appActions.setRequestStatus({status: 'loading'}))
     todolistAPI.updateTodoListTitle(todoListId, title)
         .then((res) => {
-            if (res.data.resultCode === 0) {
+            if (res.data.resultCode === ResultCode.Success) {
                 dispatch(todoListActions.updateTodoListTitle({todoListId, title}))
                 dispatch(appActions.setRequestStatus({status: 'succeeded'}))
             } else {

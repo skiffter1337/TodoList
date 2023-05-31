@@ -21,15 +21,15 @@ export const GetTasks = () => {
 }
 export const CreateTask = () => {
     const [state, setState] = useState<any>(null)
-    const [todoId, setTodoId] = useState<string>("")
-    const [taskTitle, setTaskTitle] = useState<string>("")
+    const [todoListId, setTodoListId] = useState<string>("")
+    const [title, setTitle] = useState<string>("")
 
-    const todoIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => setTodoId(e.currentTarget.value)
-    const taskTitleInputHandler = (e: ChangeEvent<HTMLInputElement>) => setTaskTitle(e.currentTarget.value)
+    const todoIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => setTodoListId(e.currentTarget.value)
+    const taskTitleInputHandler = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.currentTarget.value)
 
 
     const createTaskHandler = () => {
-        tasksAPI.createTask(todoId, taskTitle)
+        tasksAPI.createTask({todoListId, title})
             .then(res => {
                 setState(res.data.data.item)
             })
@@ -37,8 +37,8 @@ export const CreateTask = () => {
 
     return <>
         <div>{JSON.stringify(state)}</div>
-        <input value={todoId} onChange={todoIdInputHandler} placeholder={"Enter todoList ID"}/>
-        <input value={taskTitle} onChange={taskTitleInputHandler} placeholder={"Enter task title"}/>
+        <input value={todoListId} onChange={todoIdInputHandler} placeholder={"Enter todoList ID"}/>
+        <input value={title} onChange={taskTitleInputHandler} placeholder={"Enter task title"}/>
         <div>
             <button onClick={createTaskHandler}>Create task</button>
         </div>
@@ -46,14 +46,14 @@ export const CreateTask = () => {
 }
 export const DeleteTask = () => {
     const [state, setState] = useState<any>(null)
-    const [todoId, setTodoId] = useState<string>("")
+    const [todoListId, setTodoId] = useState<string>("")
     const [taskId, setTaskId] = useState<string>("")
 
     const todoIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => setTodoId(e.currentTarget.value)
     const taskIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => setTaskId(e.currentTarget.value)
 
     const deleteTaskHandler = () => {
-        tasksAPI.deleteTask(todoId, taskId)
+        tasksAPI.deleteTask({todoListId, taskId})
             .then(res => {
                 if (res.data.resultCode === 0) {
                     setState('task deleted')
@@ -63,7 +63,7 @@ export const DeleteTask = () => {
 
     return <>
         <div>{JSON.stringify(state)}</div>
-        <input value={todoId} onChange={todoIdInputHandler} placeholder={"Enter todoList ID"}/>
+        <input value={todoListId} onChange={todoIdInputHandler} placeholder={"Enter todoList ID"}/>
         <input value={taskId} onChange={taskIdInputHandler} placeholder={"Enter task ID"}/>
         <div>
             <button onClick={deleteTaskHandler}>Delete task</button>
