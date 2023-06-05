@@ -1,11 +1,10 @@
 import {TasksType} from "App/App";
-
 import {createSlice} from "@reduxjs/toolkit";
-import {appActions} from "App/app.reducer";
-import {todoListActions} from "features/todoList/todoLists.reducer";
+import {appActions} from "App/app.slice";
+import {todoListActions, todoListThunks} from "features/todoList/todoLists.slice";
 import {clearTasksAndTodoLists} from "../../common/actions/commonActions";
 import {createAppAsyncThunk, handlerServerNetworkError, handleServerAppError} from "../../common/ulits";
-import {ResultCode, TaskPriorities, TaskStatuses} from "../../common/enums";
+import {ResultCode} from "../../common/enums";
 import {AddTaskArgsType, DeleteTaskArgsType, tasksAPI, TaskType, UpdateTaskArgsType} from "./todoLists.api";
 
 
@@ -141,13 +140,13 @@ const slice = createSlice({
                     [action.payload.todoListId]: state[action.payload.todoListId].map(t => t.id === action.payload.taskId ? {...t, ...action.payload.domainModel} : t)
                 }
             })
-            .addCase(todoListActions.removeTodoList, (state, action) => {
+            .addCase(todoListThunks.removeTodoList.fulfilled, (state, action) => {
                 delete state[action.payload.todoListId]
             })
-            .addCase(todoListActions.addTodoList, (state, action) => {
+            .addCase(todoListThunks.addTodoList.fulfilled, (state, action) => {
                 state[action.payload.todoList.id] = []
             })
-            .addCase(todoListActions.setTodoLists, (state, action) => {
+            .addCase(todoListThunks.getTodoLists .fulfilled, (state, action) => {
                 action.payload.todoLists.forEach(tl => {
                     state[tl.id] = []
                 })
@@ -161,7 +160,7 @@ const slice = createSlice({
 })
 
 
-export const tasksReducer = slice.reducer;
+export const tasksSlice = slice.reducer;
 export const tasksActions = slice.actions;
 export const tasksThunks = {getTasks, addTask, deleteTask, updateTask}
 
@@ -173,8 +172,8 @@ export type UpdateTaskModelType = {
     title: string
     description: string
     completed: boolean
-    status: TaskStatuses
-    priority: TaskPriorities
+    status: number
+    priority: number
     startDate: string
     deadline: string
 }

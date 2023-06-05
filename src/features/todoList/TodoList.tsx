@@ -8,15 +8,13 @@ import {useSelector} from "react-redux";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import {
-    addTodoListTC,
-    FilteredType, getTodoListsTC,
-    removeTodoListTC, todoListActions, TodoListDomainType,
-    updateTodoListTitleTC
-} from "features/todoList/todoLists.reducer";
+    FilteredType,
+     todoListActions, TodoListDomainType, todoListThunks,
+} from "features/todoList/todoLists.slice";
 import {AppRootStateType, useAppDispatch} from "App/store/store";
 import {Navigate} from "react-router-dom";
 import {selectIsLoggedIn} from "features/auth/auth.selector";
-import {tasksThunks} from "./tasks.reducer";
+import {tasksThunks} from "./tasks.slice";
 import {AddItemForm, EditableSpan} from "../../common/components";
 
 
@@ -28,15 +26,15 @@ export const TodoList = memo(() => {
             return
         }
 
-        dispatch(getTodoListsTC())
+        dispatch(todoListThunks.getTodoLists())
     }, [isLoggedIn])
     const dispatch = useAppDispatch()
 
     const todoLists = useSelector<AppRootStateType, TodoListDomainType[]>(state => state.todoLists)
-    const addTodoList = useCallback((newTitle: string) => dispatch(addTodoListTC(newTitle)), [dispatch])
+    const addTodoList = useCallback((newTitle: string) => dispatch(todoListThunks.addTodoList(newTitle)), [dispatch])
     const changeFilter = useCallback((filter: FilteredType, todoListId: string) => dispatch(todoListActions.changeTodoListFilter({filter, todoListId})), [dispatch])
-    const removeTodoList = useCallback((todoListId: string) => dispatch(removeTodoListTC(todoListId)), [dispatch])
-    const updateTodoListTitle = useCallback((todoListId: string, newTitle: string) => dispatch(updateTodoListTitleTC(todoListId, newTitle)), [dispatch])
+    const removeTodoList = useCallback((todoListId: string) => dispatch(todoListThunks.removeTodoList(todoListId)), [dispatch])
+    const updateTodoListTitle = useCallback((todoListId: string, title: string) => dispatch(todoListThunks.updateTodoListTitle({todoListId, title})), [dispatch])
     const addNewTask = useCallback((todoListId: string, title: string) => dispatch(tasksThunks.addTask({todoListId, title})), [dispatch])
 
     const mappedTodoLists = todoLists.map(tl => {

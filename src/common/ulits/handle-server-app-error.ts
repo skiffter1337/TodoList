@@ -1,6 +1,6 @@
 import {ResponseType} from "../types/common.types";
 import {AppDispatchType} from "App/store/store";
-import {appActions} from "App/app.reducer";
+import {appActions} from "App/app.slice";
 
 
 export const handleServerAppError  = <T>(data: ResponseType<T>, dispatch: AppDispatchType) => {

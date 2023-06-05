@@ -1,4 +1,4 @@
-import {authActions, authReducer} from "./auth.reducer";
+import {authActions, authSlice} from "./auth.slice";
 
 
 let startState: {isLoggedIn: boolean};
@@ -12,7 +12,7 @@ test('setRequestStatus should be changed', () => {
 
     const action = authActions.setIsLogin({isLoggedIn: true});
 
-    const endState = authReducer(startState, action);
+    const endState = authSlice(startState, action);
 
     expect(endState.isLoggedIn).toBe(true)
 });

@@ -1,6 +1,6 @@
 import {createAction} from "@reduxjs/toolkit";
 import {TasksType} from "../../App/App";
-import {TodoListDomainType} from "../../features/todoList/todoLists.reducer";
+import {TodoListDomainType} from "../../features/todoList/todoLists.slice";
 
 export type ClearTasksAndTodoListsType = {
     tasks: TasksType

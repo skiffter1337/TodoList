@@ -2,7 +2,7 @@ import {Dispatch} from "redux";
 import {handleServerAppError} from "common/ulits/handle-server-app-error";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {AppThunkType} from "App/store/store";
-import {authActions} from "features/auth/auth.reducer";
+import {authActions} from "features/auth/auth.slice";
 import {handlerServerNetworkError} from "../common/ulits";
 import {authAPI} from "../features/auth/auth.api";
 import {ResultCode} from "../common/enums";
@@ -33,7 +33,7 @@ const slice = createSlice({
     }
 })
 
-export const appReducer = slice.reducer;
+export const appSlice = slice.reducer;
 export const appActions = slice.actions
 
 export const meTC = (): AppThunkType => (dispatch: Dispatch) => {

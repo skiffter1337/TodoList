@@ -6,7 +6,7 @@ import {TaskStatuses} from "../../enums";
 export type EditableSpanType = {
     oldTitle: string
     callback: (newTitle: string) => void
-    status?: TaskStatuses
+    status?: number
 }
 
 

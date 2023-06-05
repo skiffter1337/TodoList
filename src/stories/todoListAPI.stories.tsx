@@ -1,5 +1,6 @@
 import React, {ChangeEvent, useEffect, useState} from 'react'
 import {todoListsAPI} from "../features/todoList/todoLists.api";
+import {todoListThunks} from "../features/todoList/todoLists.slice";
 
 
 
@@ -54,14 +55,14 @@ export const DeleteTodolist = () => {
 }
 export const UpdateTodolistTitle = () => {
     const [state, setState] = useState<any>(null)
-    const [todoId, setTodoId] = useState<string>("")
-    const [todoListTitle, setTodoListTitle] = useState<string>("")
+    const [todoListId, setTodoListId] = useState<string>("")
+    const [title, setTitle] = useState<string>("")
 
-    const todoIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => setTodoId(e.currentTarget.value)
-    const todoListTitleIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => setTodoListTitle(e.currentTarget.value)
+    const todoIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => setTodoListId(e.currentTarget.value)
+    const todoListTitleIdInputHandler = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.currentTarget.value)
 
     const updateTodoListTitle = () => {
-        todoListsAPI.updateTodoListTitle(todoId, todoListTitle)
+        todoListsAPI.updateTodoListTitle({todoListId, title})
             .then(res => {
                 if (res.data.resultCode === 0) setState('todo UPDATED')
             })
@@ -69,8 +70,8 @@ export const UpdateTodolistTitle = () => {
 
     return <>
         <div>{JSON.stringify(state)}</div>
-        <input value={todoId} onChange={todoIdInputHandler} placeholder={'Please enter todoList ID'}/>
-        <input value={todoListTitle} onChange={todoListTitleIdInputHandler} placeholder={'Please enter todoList title'}/>
+        <input value={todoListId} onChange={todoIdInputHandler} placeholder={'Please enter todoList ID'}/>
+        <input value={title} onChange={todoListTitleIdInputHandler} placeholder={'Please enter todoList title'}/>
         <button onClick={updateTodoListTitle}>Update todoList</button>
     </>
 }

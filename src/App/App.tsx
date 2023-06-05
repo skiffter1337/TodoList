@@ -12,16 +12,16 @@ import IconButton from '@mui/material/IconButton';
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import {useAppDispatch} from "App/store/store";
-import {meTC} from "App/app.reducer";
+import {meTC} from "App/app.slice";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {Auth} from "features/auth/Auth";
 import {useSelector} from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress"
-import {logoutTC} from 'features/auth/auth.reducer';
 import {selectIsLoggedIn} from "features/auth/auth.selector";
 import {selectIsInitialized, selectStatus} from "./app.selector";
 import {ErrorSnackbar} from "../common/components";
 import {TaskType} from "../features/todoList/todoLists.api";
+import {logout} from "../features/auth/auth.slice";
 
 export type TasksType = {
     [todoListId: string]: TaskType[]
@@ -31,10 +31,11 @@ export type TasksType = {
 const App = () => {
     const isInitialized = useSelector(selectIsInitialized)
     const isLoggedIn = useSelector(selectIsLoggedIn)
+    console.log(isLoggedIn)
     const status = useSelector(selectStatus)
     const dispatch = useAppDispatch()
 
-    const logout = () => dispatch(logoutTC())
+    const logoutHandler = () => dispatch(logout())
 
     useEffect(() => {
         dispatch(meTC())
@@ -66,7 +67,7 @@ const App = () => {
                         <Typography variant="h6" sx={{flexGrow: 1}}>
                             TodoList
                         </Typography>
-                        {isLoggedIn &&  <Button color="inherit" onClick={logout}>Logout</Button>}
+                        {isLoggedIn &&  <Button color="inherit" onClick={logoutHandler}>Logout</Button>}
                     </Toolbar>
                     {status === 'loading' && <LinearProgress/>}
                 </AppBar>

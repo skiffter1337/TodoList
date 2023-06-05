@@ -1,7 +1,7 @@
 import {
     instance
 } from "../../common/api/common.api";
-import {UpdateTaskModelType} from "./tasks.reducer";
+import {UpdateTaskModelType} from "./tasks.slice";
 import {AxiosResponse} from "axios";
 import {TaskPriorities, TaskStatuses} from "../../common/enums";
 import {ResponseType} from "../../common/types/common.types";
@@ -13,8 +13,8 @@ export const todoListsAPI  = {
     deleteTodoList(id: string) {
         return instance.delete<ResponseType>(`todo-lists/${id}`)
     },
-    updateTodoListTitle(id: string, title: string) {
-        return instance.put<ResponseType<{item: TodoListsType}>>(`todo-lists/${id}`, {title})
+    updateTodoListTitle(arg: UpdateTodoListTitleArgsType) {
+        return instance.put<ResponseType<{item: TodoListsType}>>(`todo-lists/${arg.todoListId}`, {title: arg.title})
     },
     createTodoList(title: string) {
         return instance.post<ResponseType<{item: TodoListsType}>>('todo-lists', {title})
@@ -59,8 +59,8 @@ export type TaskType = {
     description: string
     title: string
     completed: boolean
-    status: TaskStatuses
-    priority: TaskPriorities
+    status: number
+    priority: number
     startDate: string
     deadline: string
     id: string
@@ -69,15 +69,20 @@ export type TaskType = {
     addedDate: string
 }
 
-export type AddTaskArgsType = {todoListId: string, title: string }
+export type UpdateTodoListTitleArgsType = {todoListId: string, title: string}
+
+export type AddTaskArgsType = {todoListId: string, title: string}
 export type DeleteTaskArgsType= {todoListId: string, taskId: string}
 export type UpdateTaskArgsType = { todoListId: string, taskId: string, domainModel: UpdateDomainTaskModelType }
+
+
+
 export type UpdateDomainTaskModelType = {
     title?: string
     description?: string
     completed?: boolean
-    status?: TaskStatuses
-    priority?: TaskPriorities
+    status?: number
+    priority?: number
     startDate?: string
     deadline?: string
 }

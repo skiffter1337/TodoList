@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useFormik} from "formik";
 import {useAppDispatch} from "App/store/store";
-import {loginTC} from "features/auth/auth.reducer";
+import {login} from "features/auth/auth.slice";
 import {useSelector} from "react-redux";
 import {Navigate} from "react-router-dom";
 import {selectIsLoggedIn} from "features/auth/auth.selector";
@@ -47,7 +47,7 @@ const validate = (values: any) => {
         },
         validate,
         onSubmit: values => {
-            dispatch(loginTC(values))
+            dispatch(login(values))
             formik.resetForm()
         },
     });
