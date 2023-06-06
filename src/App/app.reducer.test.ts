@@ -29,7 +29,7 @@ test('error should be set', () => {
 });
 test('initialization should be set', () => {
 
-    const action = appActions.setInitialized({isInitialized: true});
+    const action = appActions. setInitialized({isInitialized: true});
 
     const endState = appSlice(startState, action);
 

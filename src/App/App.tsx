@@ -11,8 +11,6 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
-import {useAppDispatch} from "App/store/store";
-import {meTC} from "App/app.slice";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {Auth} from "features/auth/Auth";
 import {useSelector} from "react-redux";
@@ -21,7 +19,10 @@ import {selectIsLoggedIn} from "features/auth/auth.selector";
 import {selectIsInitialized, selectStatus} from "./app.selector";
 import {ErrorSnackbar} from "../common/components";
 import {TaskType} from "../features/todoList/todoLists.api";
-import {logout} from "../features/auth/auth.slice";
+import {appThunks} from "./app.slice";
+import {authThunks} from "../features/auth/auth.slice";
+import {useActions} from "../common/hooks";
+
 
 export type TasksType = {
     [todoListId: string]: TaskType[]
@@ -31,16 +32,18 @@ export type TasksType = {
 const App = () => {
     const isInitialized = useSelector(selectIsInitialized)
     const isLoggedIn = useSelector(selectIsLoggedIn)
-    console.log(isLoggedIn)
     const status = useSelector(selectStatus)
-    const dispatch = useAppDispatch()
+    const {initializeApp} = useActions(appThunks)
+    const {logout} = useActions(authThunks)
 
-    const logoutHandler = () => dispatch(logout())
 
-    useEffect(() => {
-        dispatch(meTC())
-    }, [])
-    console.log(isInitialized)
+
+    const logoutHandler = () => logout()
+
+
+
+    useEffect(() => {initializeApp()}, [])
+
 
     if (!isInitialized) {
         return (

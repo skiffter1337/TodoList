@@ -21,12 +21,12 @@ export const store = configureStore({
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunk), // Уже есть под капотом, но можно оставить
 
 })
-export const useAppDispatch = () => useDispatch<AppDispatchType>()
-export const useAppSelector: TypedUseSelectorHook<AppRootStateType> = useSelector
 
 
-export type AppDispatchType = ThunkDispatch<AppRootStateType, unknown, AnyAction>
-export type AppThunkType<ReturnType = void> = ThunkAction<ReturnType, AppRootStateType, unknown, AnyAction>
+
+
+
+
 
 // @ts-ignore
 window.store = store

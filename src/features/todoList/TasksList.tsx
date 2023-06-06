@@ -4,10 +4,11 @@ import IconButton from "@mui/material/IconButton";
 import {DeleteOutlined} from "@material-ui/icons/";
 import Checkbox from "@mui/material/Checkbox";
 import {tasksThunks,} from "features/todoList/tasks.slice";
-import {useAppDispatch, useAppSelector} from "App/store/store";
 import {FilteredType} from "features/todoList/todoLists.slice";
 import {TaskStatuses} from "../../common/enums";
 import {TaskType} from "./todoLists.api";
+import {useAppDispatch} from "../../common/hooks";
+import {useAppSelector} from "../../common/hooks";
 
 
 

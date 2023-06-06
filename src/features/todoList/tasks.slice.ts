@@ -6,8 +6,7 @@ import {clearTasksAndTodoLists} from "../../common/actions/commonActions";
 import {createAppAsyncThunk, handlerServerNetworkError, handleServerAppError} from "../../common/ulits";
 import {ResultCode} from "../../common/enums";
 import {AddTaskArgsType, DeleteTaskArgsType, tasksAPI, TaskType, UpdateTaskArgsType} from "./todoLists.api";
-
-
+import {thunkTryCatch} from "../../common/ulits/thunk-try-catch";
 
 
 const initialState: TasksType = {}
@@ -31,37 +30,25 @@ const getTasks = createAppAsyncThunk<{ tasks: TaskType[], todoListId: string }, 
 const addTask = createAppAsyncThunk<{ task: TaskType }, AddTaskArgsType>
 ('task/addTask', async (arg, thunkAPI) => {
     const {dispatch, rejectWithValue} = thunkAPI
-    try {
-        dispatch(appActions.setRequestStatus({status: 'loading'}))
+    return thunkTryCatch(thunkAPI, async () => {
         const res = await tasksAPI.createTask(arg)
         if (res.data.resultCode === ResultCode.Success) {
-
-
             const task = res.data.data.item
-
             dispatch(appActions.setRequestStatus({status: 'succeeded'}))
             return {task}
         } else {
             handleServerAppError(res.data, dispatch)
             return rejectWithValue(null)
         }
-
-    } catch (e) {
-        handlerServerNetworkError(e, dispatch)
-        return rejectWithValue(null)
-    }
+    })
 })
 
 
-const deleteTask = createAppAsyncThunk<{
-    todoListId: string,
-    taskId: string
-}, DeleteTaskArgsType>('tasks/deleteTask', async (arg, thunkAPI) => {
+const deleteTask = createAppAsyncThunk<{todoListId: string, taskId: string }, DeleteTaskArgsType>
+('tasks/deleteTask', async (arg, thunkAPI) => {
     const {dispatch, rejectWithValue} = thunkAPI
-    const todoListId = arg.todoListId
-    const taskId = arg.taskId
-    try {
-        dispatch(appActions.setRequestStatus({status: 'loading'}))
+    const {todoListId, taskId} = arg
+    return thunkTryCatch(thunkAPI, async  () => {
         dispatch(todoListActions.changeTodoEntityStatus({todoListId, status: 'loading'}))
         const res = await tasksAPI.deleteTask(arg)
         if (res.data.resultCode === ResultCode.Success) {
@@ -72,18 +59,15 @@ const deleteTask = createAppAsyncThunk<{
             handleServerAppError(res.data, dispatch)
             return rejectWithValue(null)
         }
-    } catch (e) {
-        handlerServerNetworkError(e, dispatch)
-        return rejectWithValue(null)
-    }
+    })
 })
 
 
 const updateTask = createAppAsyncThunk<UpdateTaskArgsType, UpdateTaskArgsType>
 ('tasks/updateTask', async (arg, thunkAPI) => {
     const {dispatch, rejectWithValue, getState} = thunkAPI
-    try {
-        dispatch(appActions.setRequestStatus({status: 'loading'}))
+
+       return thunkTryCatch(thunkAPI, async () => {
         const task = getState().tasks[arg.todoListId].find(t => t.id === arg.taskId)
         if (!task) {
             dispatch(appActions.setError({error: 'task not found in the state'}))
@@ -112,10 +96,7 @@ const updateTask = createAppAsyncThunk<UpdateTaskArgsType, UpdateTaskArgsType>
         } else {
             return rejectWithValue(null)
         }
-    } catch (e) {
-        handlerServerNetworkError(e, dispatch)
-        return rejectWithValue(null)
-    }
+       })
 })
 
 const slice = createSlice({
@@ -146,7 +127,7 @@ const slice = createSlice({
             .addCase(todoListThunks.addTodoList.fulfilled, (state, action) => {
                 state[action.payload.todoList.id] = []
             })
-            .addCase(todoListThunks.getTodoLists .fulfilled, (state, action) => {
+            .addCase(todoListThunks.getTodoLists.fulfilled, (state, action) => {
                 action.payload.todoLists.forEach(tl => {
                     state[tl.id] = []
                 })

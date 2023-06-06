@@ -1,6 +1,5 @@
 import React, {memo, useCallback, useEffect} from "react";
 import TasksList from "features/todoList/TasksList";
-
 import Button from "@mui/material/Button";
 import {DeleteOutlined} from "@material-ui/icons/";
 import IconButton from "@mui/material/IconButton";
@@ -11,31 +10,37 @@ import {
     FilteredType,
      todoListActions, TodoListDomainType, todoListThunks,
 } from "features/todoList/todoLists.slice";
-import {AppRootStateType, useAppDispatch} from "App/store/store";
+import {AppRootStateType} from "App/store/store";
 import {Navigate} from "react-router-dom";
 import {selectIsLoggedIn} from "features/auth/auth.selector";
 import {tasksThunks} from "./tasks.slice";
 import {AddItemForm, EditableSpan} from "../../common/components";
+import {useActions} from "../../common/hooks";
 
 
 export const TodoList = memo(() => {
     const isLoggedIn = useSelector(selectIsLoggedIn)
+    const todoLists = useSelector<AppRootStateType, TodoListDomainType[]>(state => state.todoLists)
+
+
+    const {getTodoLists, removeTodoList, updateTodoListTitle, addTodoList} = useActions(todoListThunks)
+    const {addTask} = useActions(tasksThunks)
+    const {changeTodoListFilter} = useActions(todoListActions)
 
     useEffect(() => {
         if (!isLoggedIn) {
             return
         }
-
-        dispatch(todoListThunks.getTodoLists())
+       getTodoLists()
     }, [isLoggedIn])
-    const dispatch = useAppDispatch()
 
-    const todoLists = useSelector<AppRootStateType, TodoListDomainType[]>(state => state.todoLists)
-    const addTodoList = useCallback((newTitle: string) => dispatch(todoListThunks.addTodoList(newTitle)), [dispatch])
-    const changeFilter = useCallback((filter: FilteredType, todoListId: string) => dispatch(todoListActions.changeTodoListFilter({filter, todoListId})), [dispatch])
-    const removeTodoList = useCallback((todoListId: string) => dispatch(todoListThunks.removeTodoList(todoListId)), [dispatch])
-    const updateTodoListTitle = useCallback((todoListId: string, title: string) => dispatch(todoListThunks.updateTodoListTitle({todoListId, title})), [dispatch])
-    const addNewTask = useCallback((todoListId: string, title: string) => dispatch(tasksThunks.addTask({todoListId, title})), [dispatch])
+
+
+    const addTodoListHandler = useCallback((newTitle: string) => addTodoList(newTitle), [])
+    const changeFilterHandler = useCallback((filter: FilteredType, todoListId: string) => changeTodoListFilter({filter, todoListId}), [])
+    const removeTodoListHandler = useCallback((todoListId: string) => removeTodoList(todoListId), [])
+    const updateTodoListTitleHandler = useCallback((todoListId: string, title: string) => updateTodoListTitle({todoListId, title}), [])
+    const addTaskHandler = useCallback((todoListId: string, title: string) => addTask({todoListId, title}), [])
 
     const mappedTodoLists = todoLists.map(tl => {
 
@@ -51,12 +56,12 @@ export const TodoList = memo(() => {
                     <div className={"todolist"}>
                         <h3>
                             <EditableSpan
-                                callback={(newTitle) => updateTodoListTitle(tl.id, newTitle)}
+                                callback={(newTitle) => updateTodoListTitleHandler(tl.id, newTitle)}
                                 oldTitle={tl.title}/>
-                            <IconButton onClick={() => removeTodoList(tl.id)} disabled={tl.entityStatus === 'loading'}>{
+                            <IconButton onClick={() => removeTodoListHandler(tl.id)} disabled={tl.entityStatus === 'loading'}>{
                                 <DeleteOutlined/>}</IconButton>
                         </h3>
-                        <AddItemForm callback={(newTitle) => addNewTask(tl.id, newTitle)}
+                        <AddItemForm callback={(newTitle) => addTaskHandler(tl.id, newTitle)}
                                      disabled={tl.entityStatus === 'loading'}/>
                         <TasksList
                             todoListId={tl.id}
@@ -64,13 +69,13 @@ export const TodoList = memo(() => {
                         />
                         <div className="filter-btn-container">
                             <Button size="small" color="secondary" style={allButtonClasses}
-                                    onClick={() => changeFilter("all", tl.id)}>All
+                                    onClick={() => changeFilterHandler("all", tl.id)}>All
                             </Button>
                             <Button size="small" color="secondary" style={activeButtonClasses}
-                                    onClick={() => changeFilter("active", tl.id)}>Active
+                                    onClick={() => changeFilterHandler("active", tl.id)}>Active
                             </Button>
                             <Button size="small" color="secondary" style={completedButtonClasses}
-                                    onClick={() => changeFilter("completed", tl.id)}>Completed
+                                    onClick={() => changeFilterHandler("completed", tl.id)}>Completed
                             </Button>
                         </div>
                     </div>
@@ -78,13 +83,12 @@ export const TodoList = memo(() => {
             </Grid>
         );
     })
-    console.log(isLoggedIn)
 
 
     if (!isLoggedIn) return <Navigate to={'/login'}/>
     return <>
         <Grid container style={{margin: "50px"}}>
-            <AddItemForm callback={(newTitle) => addTodoList(newTitle)}/>
+            <AddItemForm callback={(newTitle) => addTodoListHandler(newTitle)}/>
         </Grid>
         {mappedTodoLists}
     </>

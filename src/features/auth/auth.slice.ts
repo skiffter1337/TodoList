@@ -7,17 +7,17 @@ import {authAPI, LoginParamsType} from './auth.api';
 import {ResultCode} from '../../common/enums';
 
 
-export const login = createAppAsyncThunk<undefined, LoginParamsType>('auth/login', async (data, thunkAPI) => {
+const login = createAppAsyncThunk<{isLoggedIn: boolean}, LoginParamsType>('auth/login', async (arg, thunkAPI) => {
     const {dispatch, rejectWithValue} = thunkAPI
     try {
         dispatch(appActions.setRequestStatus({status: 'loading'}))
-        const res = await authAPI.login(data)
+        const res = await authAPI.login(arg)
         if (res.data.resultCode === ResultCode.Success) {
             dispatch(appActions.setRequestStatus({status: 'succeeded'}))
-            return
+            return {isLoggedIn: true}
         } else {
             handleServerAppError(res.data, dispatch)
-            return rejectWithValue(null)
+            return rejectWithValue(res.data)
         }
     } catch (error) {
         handlerServerNetworkError(error, dispatch)
@@ -25,7 +25,7 @@ export const login = createAppAsyncThunk<undefined, LoginParamsType>('auth/login
     }
 })
 
-export const logout = createAppAsyncThunk('auth/logout', async (arg, thunkAPI) => {
+const logout = createAppAsyncThunk<{isLoggedIn: boolean}>('auth/logout', async (_, thunkAPI) => {
     const {dispatch, rejectWithValue} = thunkAPI
     try {
         dispatch(appActions.setRequestStatus({status: 'loading'}))
@@ -33,12 +33,13 @@ export const logout = createAppAsyncThunk('auth/logout', async (arg, thunkAPI) =
         if (res.data.resultCode === ResultCode.Success) {
             dispatch(clearTasksAndTodoLists())
             dispatch(appActions.setRequestStatus({status: 'succeeded'}))
-            return
+            return {isLoggedIn: false}
         } else {
             handleServerAppError(res.data, dispatch)
             return rejectWithValue(null)
         }
     } catch (error) {
+        debugger
         handlerServerNetworkError(error, dispatch)
         return rejectWithValue(null)
     }
@@ -57,10 +58,10 @@ const slice = createSlice({
     extraReducers: builder => {
         builder
             .addCase(login.fulfilled, (state, action) => {
-                state.isLoggedIn = true
+                state.isLoggedIn = action.payload.isLoggedIn
             })
             .addCase(logout.fulfilled, (state, action) => {
-                state.isLoggedIn = false
+                state.isLoggedIn = action.payload.isLoggedIn
             })
     }
 })
@@ -68,4 +69,4 @@ const slice = createSlice({
 export const authSlice = slice.reducer
 export const authActions = slice.actions
 
-
+export  const authThunks = {login, logout}

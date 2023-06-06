@@ -7,12 +7,15 @@ import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import {useFormik} from "formik";
-import {useAppDispatch} from "App/store/store";
-import {login} from "features/auth/auth.slice";
+import {FormikHelpers, useFormik} from "formik";
+import {authThunks} from "features/auth/auth.slice";
 import {useSelector} from "react-redux";
 import {Navigate} from "react-router-dom";
 import {selectIsLoggedIn} from "features/auth/auth.selector";
+import {LoginParamsType} from "./auth.api";
+import s from './Auth.module.css'
+import {ResponseType} from "../../common/types";
+import {useAppDispatch} from "../../common/hooks";
 
 type FormikErrorsType = {
     email?: string
@@ -23,7 +26,7 @@ export const Auth = () => {
 
     const dispatch = useAppDispatch()
     const isLoggedIn = useSelector(selectIsLoggedIn)
-const validate = (values: any) => {
+    const validate = (values: any) => {
         const errors: FormikErrorsType = {}
         if (!values.email) {
             errors.email = "Email is required"
@@ -46,15 +49,21 @@ const validate = (values: any) => {
             rememberMe: false,
         },
         validate,
-        onSubmit: values => {
-            dispatch(login(values))
-            formik.resetForm()
+        onSubmit: (values, formikHelpers:  FormikHelpers<LoginParamsType>) => {
+            dispatch(authThunks.login(values))
+                .unwrap()
+                .catch((reason: ResponseType) => {
+                   if(reason.fieldsErrors) {
+                    reason.fieldsErrors.forEach(el => formikHelpers.setFieldError(el.field, el.error))
+                   }
+                })
+
         },
     });
 
 
-    if(isLoggedIn) {
-      return <Navigate to={'/'}/>
+    if (isLoggedIn) {
+        return <Navigate to={'/'}/>
     }
 
     return <Grid container justifyContent={'center'} marginTop={'150px'}>
@@ -75,12 +84,12 @@ const validate = (values: any) => {
 
                         <TextField label="Email" margin="normal" {...formik.getFieldProps('email')}/>
                         {formik.touched.email && formik.errors.email &&
-                            <div style={{color: 'red'}}>{formik.errors.email}</div>}
+                            <div className={s.errorField}>{formik.errors.email}</div>}
 
                         <TextField type="password" label="Password"
                                    margin="normal"  {...formik.getFieldProps('password')}/>
                         {formik.touched.password && formik.errors.password &&
-                            <div style={{color: 'red'}}>{formik.errors.password}</div>}
+                            <div className={s.errorField}>{formik.errors.password}</div>}
 
                         <FormControlLabel label={'Remember me'} control={
                             <Checkbox  {...formik.getFieldProps('rememberMe')} checked={formik.values.rememberMe}/>
