@@ -1,5 +1,4 @@
 import React, {memo, useCallback, useEffect} from "react";
-import TasksList from "features/todoList/TasksList";
 import Button from "@mui/material/Button";
 import {DeleteOutlined} from "@material-ui/icons/";
 import IconButton from "@mui/material/IconButton";
@@ -8,19 +7,21 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import {
     FilteredType,
-     todoListActions, TodoListDomainType, todoListThunks,
+     todoListActions, todoListThunks,
 } from "features/todoList/todoLists.slice";
-import {AppRootStateType} from "App/store/store";
 import {Navigate} from "react-router-dom";
 import {selectIsLoggedIn} from "features/auth/auth.selector";
 import {tasksThunks} from "./tasks.slice";
 import {AddItemForm, EditableSpan} from "../../common/components";
 import {useActions} from "../../common/hooks";
+import {TasksList} from "./TasksList";
+import {selectTodoLists} from "./todolist.selector";
+
 
 
 export const TodoList = memo(() => {
     const isLoggedIn = useSelector(selectIsLoggedIn)
-    const todoLists = useSelector<AppRootStateType, TodoListDomainType[]>(state => state.todoLists)
+    const todoLists = useSelector(selectTodoLists)
 
 
     const {getTodoLists, removeTodoList, updateTodoListTitle, addTodoList} = useActions(todoListThunks)

@@ -2,15 +2,15 @@ import {handleServerAppError} from 'common/ulits/handle-server-app-error';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {appActions} from 'App/app.slice';
 import {clearTasksAndTodoLists} from '../../common/actions/commonActions';
-import {createAppAsyncThunk, handlerServerNetworkError} from '../../common/ulits';
+import {createAppAsyncThunk} from '../../common/ulits';
 import {authAPI, LoginParamsType} from './auth.api';
 import {ResultCode} from '../../common/enums';
+import {thunkTryCatch} from "../../common/ulits/thunk-try-catch";
 
 
 const login = createAppAsyncThunk<{isLoggedIn: boolean}, LoginParamsType>('auth/login', async (arg, thunkAPI) => {
     const {dispatch, rejectWithValue} = thunkAPI
-    try {
-        dispatch(appActions.setRequestStatus({status: 'loading'}))
+       return thunkTryCatch(thunkAPI, async () => {
         const res = await authAPI.login(arg)
         if (res.data.resultCode === ResultCode.Success) {
             dispatch(appActions.setRequestStatus({status: 'succeeded'}))
@@ -19,16 +19,12 @@ const login = createAppAsyncThunk<{isLoggedIn: boolean}, LoginParamsType>('auth/
             handleServerAppError(res.data, dispatch)
             return rejectWithValue(res.data)
         }
-    } catch (error) {
-        handlerServerNetworkError(error, dispatch)
-        return rejectWithValue(null)
-    }
+       })
 })
 
 const logout = createAppAsyncThunk<{isLoggedIn: boolean}>('auth/logout', async (_, thunkAPI) => {
     const {dispatch, rejectWithValue} = thunkAPI
-    try {
-        dispatch(appActions.setRequestStatus({status: 'loading'}))
+    return thunkTryCatch(thunkAPI, async () => {
         const res = await authAPI.logout()
         if (res.data.resultCode === ResultCode.Success) {
             dispatch(clearTasksAndTodoLists())
@@ -38,11 +34,7 @@ const logout = createAppAsyncThunk<{isLoggedIn: boolean}>('auth/logout', async (
             handleServerAppError(res.data, dispatch)
             return rejectWithValue(null)
         }
-    } catch (error) {
-        debugger
-        handlerServerNetworkError(error, dispatch)
-        return rejectWithValue(null)
-    }
+    })
 })
 
 const slice = createSlice({

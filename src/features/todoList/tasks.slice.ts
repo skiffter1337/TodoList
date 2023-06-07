@@ -49,7 +49,6 @@ const deleteTask = createAppAsyncThunk<{todoListId: string, taskId: string }, De
     const {dispatch, rejectWithValue} = thunkAPI
     const {todoListId, taskId} = arg
     return thunkTryCatch(thunkAPI, async  () => {
-        dispatch(todoListActions.changeTodoEntityStatus({todoListId, status: 'loading'}))
         const res = await tasksAPI.deleteTask(arg)
         if (res.data.resultCode === ResultCode.Success) {
             dispatch(appActions.setRequestStatus({status: 'succeeded'}))
@@ -66,7 +65,6 @@ const deleteTask = createAppAsyncThunk<{todoListId: string, taskId: string }, De
 const updateTask = createAppAsyncThunk<UpdateTaskArgsType, UpdateTaskArgsType>
 ('tasks/updateTask', async (arg, thunkAPI) => {
     const {dispatch, rejectWithValue, getState} = thunkAPI
-
        return thunkTryCatch(thunkAPI, async () => {
         const task = getState().tasks[arg.todoListId].find(t => t.id === arg.taskId)
         if (!task) {
