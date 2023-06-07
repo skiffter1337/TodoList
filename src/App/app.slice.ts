@@ -1,9 +1,9 @@
-import {handleServerAppError} from "common/ulits/handle-server-app-error";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {createAppAsyncThunk, handlerServerNetworkError} from "../common/ulits";
+import {createAppAsyncThunk} from "../common/ulits";
 import {authAPI} from "../features/auth/auth.api";
 import {ResultCode} from "../common/enums";
 import {authActions} from "../features/auth/auth.slice";
+import {thunkTryCatch} from "../common/ulits/thunk-try-catch";
 
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
@@ -16,8 +16,7 @@ export type AppInitialStateType = {
 
 export const initializeApp  = createAppAsyncThunk('app/me', async (arg, thunkAPI) => {
     const {dispatch, rejectWithValue} = thunkAPI
-    try {
-        dispatch(appActions.setRequestStatus({status: 'loading'}))
+   return thunkTryCatch(thunkAPI, async () => {
         const res = await authAPI.me()
         if (res.data.resultCode === ResultCode.Success) {
             dispatch(appActions.setRequestStatus({status: 'succeeded'}))
@@ -26,14 +25,8 @@ export const initializeApp  = createAppAsyncThunk('app/me', async (arg, thunkAPI
             dispatch(appActions.setRequestStatus({status: 'failed'}))
             return rejectWithValue(null)
         }
-
-    } catch (error) {
-        handlerServerNetworkError(error, dispatch)
-        return rejectWithValue(null)
-    }
-    finally {
-        dispatch(appActions.setInitialized({isInitialized: true}))
-    }
+   }, true)
+    // fix shouldInit
 })
 
 
