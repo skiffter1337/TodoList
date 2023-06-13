@@ -93,6 +93,7 @@
     "babel-plugin-named-exports-order": "0.0.2",
     "jest-image-snapshot": "^6.1.0",
     "jest-puppeteer": "^8.0.6",
+    "prettier": "2.8.8",
     "prop-types": "15.8.1",
     "puppeteer": "^19.9.1",
     "start-server-and-test": "^2.0.0",
@@ -101,6 +102,8 @@
     "webpack": "5.79.0"
   },
   "jest": {
-    "transformIgnorePatterns": ["\"node_modules/(?!axios)/\""]
+    "transformIgnorePatterns": [
+      "\"node_modules/(?!axios)/\""
+    ]
   }
 }
