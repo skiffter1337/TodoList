@@ -1,13 +1,13 @@
 import React, {ChangeEvent, memo, useCallback} from 'react';
 import Checkbox from "@mui/material/Checkbox";
-import {TaskStatuses} from "../../../../common/enums";
-import {EditableSpan} from "../../../../common/components";
+import {TaskStatuses} from "../../../../../common/enums";
+import {EditableSpan} from "../../../../../common/components";
 import IconButton from "@mui/material/IconButton";
 import {DeleteOutlined} from "@material-ui/icons";
-import {useActions} from "../../../../common/hooks";
+import {useActions} from "../../../../../common/hooks";
 import {useSelector} from "react-redux";
-import {appSelectors} from "../../../../app";
-import {tasksThunks} from "../tasks.slice";
+import {appSelectors} from "../../../../../app";
+import {tasksThunks} from "../../tasks.slice";
 import s from './Task.module.css'
 
 type PropsType = {

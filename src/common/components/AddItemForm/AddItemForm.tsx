@@ -4,12 +4,12 @@ import IconButton from "@mui/material/IconButton";
 import {AddBox} from "@material-ui/icons";
 
 export type AddItemFormType = {
-    callback: (newTitle: string)=>void
+    addItem: (newTitle: string)=> void
     disabled?: boolean
 }
 
 
-export const AddItemForm = memo((props: AddItemFormType) => {
+export const AddItemForm: React.FC<AddItemFormType> = memo(({addItem, disabled}) => {
 
 
 
@@ -21,12 +21,12 @@ export const AddItemForm = memo((props: AddItemFormType) => {
         setTitle(event.currentTarget.value)
     }
 
-    const onKeyDownTask = (event: KeyboardEvent<HTMLInputElement>) => event.key === "Enter" && title.length < 15 && addItem()
+    const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => event.key === "Enter" && title.length < 15 && addItemHandler()
 
-    const addItem = () => {
+    const addItemHandler = () => {
         const trimmedTitle = title.trim()
         if (trimmedTitle) {
-            props.callback(title)
+            addItem(title)
         } else setError(true)
         setTitle("")
     }
@@ -43,16 +43,16 @@ export const AddItemForm = memo((props: AddItemFormType) => {
             <TextField
                 value={title}
                 onChange={changeLocalTitle}
-                onKeyDown={onKeyDownTask}
+                onKeyDown={onKeyDownHandler}
                 className={inputErrorClasses}
                 id="standard-basic"
                 size="small"
                 label="Enter text"
-                disabled={props.disabled}
+                disabled={disabled}
             />
             <IconButton
-                disabled={inputButtonDisabling || props.disabled}
-                onClick={addItem}
+                disabled={inputButtonDisabling || disabled}
+                onClick={addItemHandler}
 
             >
                <AddBox/>

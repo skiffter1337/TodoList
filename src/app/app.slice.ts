@@ -47,6 +47,31 @@ const slice = createSlice({
         setInitialized: (state, action: PayloadAction<{ isInitialized: boolean }>) => {
             state.isInitialized = action.payload.isInitialized
         }
+    },
+    extraReducers: builder =>  {
+        builder
+            .addMatcher(
+                (action) => {
+                    return action.type.endsWith('/pending')
+                },
+                (state) => {
+                    state.status = 'loading'
+                })
+            .addMatcher(
+                (action) => {
+                    return action.type.endsWith('/rejected')
+                },
+                (state, action) => {
+                    state.error = action.payload.messages[0]
+                    state.status = 'failed'
+                })
+            .addMatcher(
+                (action) => {
+                    return action.type.endsWith('/fulfilled')
+                },
+                (state) => {
+                    state.status = 'idle'
+                })
     }
 })
 

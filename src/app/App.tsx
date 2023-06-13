@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import './App.css';
 import s from './App.module.css'
-import {Todolist} from "features/todolists/Todolist/Todolist";
+import {TodolistList} from "features/todolists/TodolistList/TodolistList";
 import Container from '@mui/material/Container';
 import Grid from "@mui/material/Grid";
 import AppBar from '@mui/material/AppBar';
@@ -81,7 +81,7 @@ const App = () => {
                 <Container fixed>
                     <Grid container spacing={3}>
                         <Routes>
-                            <Route path={'/'} element={<Todolist/>}/>
+                            <Route path={'/'} element={<TodolistList/>}/>
                             <Route path={'/login'} element={<Login/>}/>
                             <Route path={'/404'} element={<h2>404: Page not found</h2>}/>
                             <Route path={'*'} element={<Navigate to='/404'/>}/>

@@ -1,6 +1,4 @@
 import type {Meta, StoryObj} from '@storybook/react';
-
-import {Button} from './Button';
 import {AddItemForm, AddItemFormType} from "../common/components/AddItemForm/AddItemForm";
 import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import TextField from "@mui/material/TextField";
@@ -14,7 +12,7 @@ const meta: Meta<typeof AddItemForm> = {
     tags: ['autodocs'],
 
     argTypes: {
-        callback: {
+        addItem: {
             description: 'Button clicked inside the form',
             action: 'added'
         }
@@ -42,7 +40,7 @@ export const AddItemFormErrorStory = (args: AddItemFormType) => {
     const addItem = () => {
         const trimmedTitle = title.trim()
         if (trimmedTitle) {
-            args.callback(title)
+            args.addItem(title)
         } else setError(true)
         setTitle("")
     }

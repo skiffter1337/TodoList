@@ -4,7 +4,7 @@ import {FilteredType} from "features/todolists/todoLists.slice";
 import {TaskStatuses} from "../../../../common/enums";
 import {useActions} from "../../../../common/hooks";
 import {useAppSelector} from "../../../../common/hooks";
-import {Task} from "../Task/Task";
+import {Task} from "./Task/Task";
 import {TaskType} from "../tasks.api";
 
 
@@ -14,7 +14,7 @@ type PropsType = {
     filter: FilteredType
 }
 
-export const TasksList: React.FC<PropsType> = memo(({todoListId, filter}) => {
+export const  TasksList: React.FC<PropsType> = memo(({todoListId, filter}) => {
 
 
     const {getTasks} = useActions(tasksThunks)
