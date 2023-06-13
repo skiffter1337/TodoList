@@ -1,4 +1,4 @@
-import {appActions, RequestStatusType} from "App/app.slice";
+import {appActions, RequestStatusType} from "app/app.slice";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {clearTasksAndTodoLists} from "../../common/actions/commonActions";
 import {createAppAsyncThunk, handleServerAppError} from "../../common/ulits";

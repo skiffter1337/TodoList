@@ -1,12 +1,12 @@
-import {TasksType} from "App/App";
+import {TasksType} from "app/App";
 import {createSlice} from "@reduxjs/toolkit";
-import {appActions} from "App/app.slice";
-import {todoListActions, todoListThunks} from "features/todoList/todoLists.slice";
-import {clearTasksAndTodoLists} from "../../common/actions/commonActions";
-import {createAppAsyncThunk, handlerServerNetworkError, handleServerAppError} from "../../common/ulits";
-import {ResultCode} from "../../common/enums";
-import {AddTaskArgsType, DeleteTaskArgsType, tasksAPI, TaskType, UpdateTaskArgsType} from "./todoLists.api";
-import {thunkTryCatch} from "../../common/ulits/thunk-try-catch";
+import {appActions} from "app/app.slice";
+import {todoListActions, todoListThunks} from "features/todolists/todoLists.slice";
+import {clearTasksAndTodoLists} from "../../../common/actions/commonActions";
+import {createAppAsyncThunk, handlerServerNetworkError, handleServerAppError} from "../../../common/ulits";
+import {ResultCode} from "../../../common/enums";
+import {thunkTryCatch} from "../../../common/ulits/thunk-try-catch";
+import {AddTaskArgsType, DeleteTaskArgsType, tasksAPI, TaskType, UpdateTaskArgsType} from "./tasks.api";
 
 
 const initialState: TasksType = {}
@@ -140,7 +140,6 @@ const slice = createSlice({
 
 
 export const tasksSlice = slice.reducer;
-export const tasksActions = slice.actions;
 export const tasksThunks = {getTasks, addTask, deleteTask, updateTask}
 
 

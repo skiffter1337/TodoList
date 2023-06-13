@@ -1,7 +1,5 @@
 import React, {ChangeEvent, useEffect, useState} from 'react'
-import {todoListsAPI} from "../features/todoList/todoLists.api";
-import {todoListThunks} from "../features/todoList/todoLists.slice";
-
+import {todoListsAPI} from "../features/todolists/todoLists.api";
 
 
 export default {
@@ -49,7 +47,7 @@ export const DeleteTodolist = () => {
 
     return <>
         <div>{JSON.stringify(state)}</div>
-        <input value={todoId} onChange={todoIdInputHandler} placeholder={'Please enter todoList ID'}/>
+        <input value={todoId} onChange={todoIdInputHandler} placeholder={'Please enter todolists ID'}/>
         <button onClick={deleteTodoListHandler}>Delete todoList</button>
     </>
 }
@@ -70,8 +68,8 @@ export const UpdateTodolistTitle = () => {
 
     return <>
         <div>{JSON.stringify(state)}</div>
-        <input value={todoListId} onChange={todoIdInputHandler} placeholder={'Please enter todoList ID'}/>
-        <input value={title} onChange={todoListTitleIdInputHandler} placeholder={'Please enter todoList title'}/>
+        <input value={todoListId} onChange={todoIdInputHandler} placeholder={'Please enter todolists ID'}/>
+        <input value={title} onChange={todoListTitleIdInputHandler} placeholder={'Please enter todolists title'}/>
         <button onClick={updateTodoListTitle}>Update todoList</button>
     </>
 }

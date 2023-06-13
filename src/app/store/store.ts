@@ -1,9 +1,8 @@
-import {AnyAction, combineReducers} from "redux";
-import {todoListsSlice} from "features/todoList/todoLists.slice";
-import {tasksSlice} from "features/todoList/tasks.slice";
-import thunk, {ThunkAction, ThunkDispatch} from "redux-thunk";
-import {appSlice} from "App/app.slice";
-import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
+import {combineReducers} from "redux";
+import {todoListsSlice} from "features/todolists/todoLists.slice";
+import {tasksSlice} from "features/todolists/tasks/tasks.slice";
+import thunk from "redux-thunk";
+import {appSlice} from "app/app.slice";
 import {authSlice} from "features/auth/auth.slice";
 import {configureStore} from "@reduxjs/toolkit";
 

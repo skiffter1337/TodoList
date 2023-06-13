@@ -1,5 +1,5 @@
 import axios, {AxiosError} from "axios";
-import {appActions} from "../../App/app.slice";
+import {appActions} from "../../app/app.slice";
 import {AppDispatchType} from "../hooks/useAppDispatch";
 
 /**

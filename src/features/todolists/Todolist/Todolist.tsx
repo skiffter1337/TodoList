@@ -8,19 +8,20 @@ import Paper from "@mui/material/Paper";
 import {
     FilteredType,
      todoListActions, todoListThunks,
-} from "features/todoList/todoLists.slice";
+} from "features/todolists/todoLists.slice";
 import {Navigate} from "react-router-dom";
-import {selectIsLoggedIn} from "features/auth/auth.selector";
-import {tasksThunks} from "./tasks.slice";
-import {AddItemForm, EditableSpan} from "../../common/components";
-import {useActions} from "../../common/hooks";
-import {TasksList} from "./TasksList";
-import {selectTodoLists} from "./todolist.selector";
+import {tasksThunks} from "../tasks/tasks.slice";
+import {AddItemForm, EditableSpan} from "../../../common/components";
+import {useActions} from "../../../common/hooks";
+import {TasksList} from "../tasks/TasksList/TasksList";
+import {selectTodoLists} from "../todolist.selector";
+import {authSelectors} from "../../auth";
 
 
 
-export const TodoList = memo(() => {
-    const isLoggedIn = useSelector(selectIsLoggedIn)
+
+export const Todolist = memo(() => {
+    const isLoggedIn = useSelector(authSelectors.selectIsLoggedIn)
     const todoLists = useSelector(selectTodoLists)
 
 
@@ -32,7 +33,7 @@ export const TodoList = memo(() => {
         if (!isLoggedIn) {
             return
         }
-       getTodoLists()
+       getTodoLists({})
     }, [isLoggedIn])
 
 
@@ -53,7 +54,7 @@ export const TodoList = memo(() => {
 
         return (
             <Grid item key={tl.id}>
-                <Paper elevation={7}>
+                <Paper elevation={7} style={{width: "320px"}}>
                     <div className={"todolist"}>
                         <h3>
                             <EditableSpan
@@ -69,13 +70,13 @@ export const TodoList = memo(() => {
                             filter={tl.filter}
                         />
                         <div className="filter-btn-container">
-                            <Button size="small" color="secondary" style={allButtonClasses}
+                            <Button style={allButtonClasses}
                                     onClick={() => changeFilterHandler("all", tl.id)}>All
                             </Button>
-                            <Button size="small" color="secondary" style={activeButtonClasses}
+                            <Button style={activeButtonClasses}
                                     onClick={() => changeFilterHandler("active", tl.id)}>Active
                             </Button>
-                            <Button size="small" color="secondary" style={completedButtonClasses}
+                            <Button style={completedButtonClasses}
                                     onClick={() => changeFilterHandler("completed", tl.id)}>Completed
                             </Button>
                         </div>

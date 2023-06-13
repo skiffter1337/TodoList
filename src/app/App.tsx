@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import './App.css';
 import s from './App.module.css'
-import {TodoList} from "features/todoList/TodoList";
+import {Todolist} from "features/todolists/Todolist/Todolist";
 import Container from '@mui/material/Container';
 import Grid from "@mui/material/Grid";
 import AppBar from '@mui/material/AppBar';
@@ -12,16 +12,17 @@ import IconButton from '@mui/material/IconButton';
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import {Navigate, Route, Routes} from "react-router-dom";
-import {Auth} from "features/auth/Auth";
+import {Login} from "features/auth/Login/Login";
 import {useSelector} from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress"
-import {selectIsLoggedIn} from "features/auth/auth.selector";
 import {selectIsInitialized, selectStatus} from "./app.selector";
 import {ErrorSnackbar} from "../common/components";
-import {TaskType} from "../features/todoList/todoLists.api";
 import {appThunks} from "./app.slice";
 import {authThunks} from "../features/auth/auth.slice";
 import {useActions} from "../common/hooks";
+import {authSelectors} from "../features/auth";
+import {TaskType} from "../features/todolists/tasks/tasks.api";
+
 
 
 export type TasksType = {
@@ -31,18 +32,18 @@ export type TasksType = {
 // Start migration to RTK
 const App = () => {
     const isInitialized = useSelector(selectIsInitialized)
-    const isLoggedIn = useSelector(selectIsLoggedIn)
+    const isLoggedIn = useSelector(authSelectors.selectIsLoggedIn)
     const status = useSelector(selectStatus)
     const {initializeApp} = useActions(appThunks)
     const {logout} = useActions(authThunks)
 
 
 
-    const logoutHandler = () => logout()
+    const logoutHandler = () => logout({})
 
 
 
-    useEffect(() => {initializeApp()}, [])
+    useEffect(() => {initializeApp({})}, [])
 
 
     if (!isInitialized) {
@@ -80,8 +81,8 @@ const App = () => {
                 <Container fixed>
                     <Grid container spacing={3}>
                         <Routes>
-                            <Route path={'/'} element={<TodoList/>}/>
-                            <Route path={'/login'} element={<Auth/>}/>
+                            <Route path={'/'} element={<Todolist/>}/>
+                            <Route path={'/login'} element={<Login/>}/>
                             <Route path={'/404'} element={<h2>404: Page not found</h2>}/>
                             <Route path={'*'} element={<Navigate to='/404'/>}/>
                         </Routes>

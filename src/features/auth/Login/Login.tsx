@@ -12,22 +12,19 @@ import {authThunks} from "features/auth/auth.slice";
 import {useSelector} from "react-redux";
 import {Navigate} from "react-router-dom";
 import {selectIsLoggedIn} from "features/auth/auth.selector";
-import {LoginParamsType} from "./auth.api";
-import s from './Auth.module.css'
-import {ResponseType} from "../../common/types";
-import {useAppDispatch} from "../../common/hooks";
+import {LoginParamsType} from "../auth.api";
+import s from '../Auth.module.css'
+import {ResponseType} from "../../../common/types";
+import {useActions} from "../../../common/hooks";
 
-type FormikErrorsType = {
-    email?: string
-    password?: string
-    rememberMe?: boolean
-}
-export const Auth = () => {
 
-    const dispatch = useAppDispatch()
+
+export const Login = () => {
+
+    const {login} = useActions(authThunks)
     const isLoggedIn = useSelector(selectIsLoggedIn)
     const validate = (values: any) => {
-        const errors: FormikErrorsType = {}
+        const errors: Partial<Omit<LoginParamsType, 'captcha'>> = {}
         if (!values.email) {
             errors.email = "Email is required"
         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
@@ -49,8 +46,8 @@ export const Auth = () => {
             rememberMe: false,
         },
         validate,
-        onSubmit: (values, formikHelpers:  FormikHelpers<LoginParamsType>) => {
-            dispatch(authThunks.login(values))
+        onSubmit:  (values, formikHelpers:  FormikHelpers<LoginParamsType>) => {
+           login(values)
                 .unwrap()
                 .catch((reason: ResponseType) => {
                    if(reason.fieldsErrors) {

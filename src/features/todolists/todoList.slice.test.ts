@@ -13,7 +13,7 @@ beforeEach(() => {
     ]
 })
 
-test('filter in correct todoList should be changed', () => {
+test('filter in correct todolists should be changed', () => {
 
 
     const action = todoListActions.changeTodoListFilter(
@@ -25,7 +25,7 @@ test('filter in correct todoList should be changed', () => {
     expect(endState[0].filter).toBe('active')
     expect(endState[1].filter).toBe('all')
 });
-test('correct todoList should be deleted', () => {
+test('correct todolists should be deleted', () => {
 
 
     const action = todoListThunks.removeTodoList.fulfilled({todoListId: todoListId1}, 'requestId', todoListId1);
@@ -49,7 +49,7 @@ const args = {todoList: {id: 'todoListId3', title: 'new todo3', order: 0, addedD
     expect(endState[0].title).toBe('new todo3')
 
 });
-test('todoList title should be updated', () => {
+test('todolists title should be updated', () => {
 
 const args = {todoListId: todoListId1, title: 'new title'}
     const action = todoListThunks.updateTodoListTitle.fulfilled(args, 'requestId', args);

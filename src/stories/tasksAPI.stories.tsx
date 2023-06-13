@@ -1,5 +1,6 @@
 import React, {ChangeEvent, useEffect, useState} from 'react'
-import {tasksAPI} from "../features/todoList/todoLists.api";
+import {tasksAPI} from "../features/todolists/tasks/tasks.api";
+
 
 export default {
     title: 'API-TASKS'
@@ -37,7 +38,7 @@ export const CreateTask = () => {
 
     return <>
         <div>{JSON.stringify(state)}</div>
-        <input value={todoListId} onChange={todoIdInputHandler} placeholder={"Enter todoList ID"}/>
+        <input value={todoListId} onChange={todoIdInputHandler} placeholder={"Enter todolists ID"}/>
         <input value={title} onChange={taskTitleInputHandler} placeholder={"Enter task title"}/>
         <div>
             <button onClick={createTaskHandler}>Create task</button>
@@ -63,7 +64,7 @@ export const DeleteTask = () => {
 
     return <>
         <div>{JSON.stringify(state)}</div>
-        <input value={todoListId} onChange={todoIdInputHandler} placeholder={"Enter todoList ID"}/>
+        <input value={todoListId} onChange={todoIdInputHandler} placeholder={"Enter todolists ID"}/>
         <input value={taskId} onChange={taskIdInputHandler} placeholder={"Enter task ID"}/>
         <div>
             <button onClick={deleteTaskHandler}>Delete task</button>
@@ -92,7 +93,7 @@ export const UpdateTaskTitle = () => {
 
     return <>
         <div>{JSON.stringify(state)}</div>
-        <input value={todoId} onChange={todoIdInputHandler} placeholder={"Enter todoList ID"}/>
+        <input value={todoId} onChange={todoIdInputHandler} placeholder={"Enter todolists ID"}/>
         <input value={taskId} onChange={taskIdInputHandler} placeholder={"Enter task ID"}/>
         <input value={newTaskTitle} onChange={taskTitleInputHandler} placeholder={"Enter task title"}/>
         <div>

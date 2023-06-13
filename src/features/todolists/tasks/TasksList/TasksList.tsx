@@ -1,32 +1,32 @@
 import React, {memo, useEffect} from 'react';
-import {tasksThunks,} from "features/todoList/tasks.slice";
-import {FilteredType} from "features/todoList/todoLists.slice";
-import {TaskStatuses} from "../../common/enums";
-import {TaskType} from "./todoLists.api";
-import {useActions} from "../../common/hooks";
-import {useAppSelector} from "../../common/hooks";
-import {Task} from "./Task";
+import {tasksThunks,} from "features/todolists/tasks/tasks.slice";
+import {FilteredType} from "features/todolists/todoLists.slice";
+import {TaskStatuses} from "../../../../common/enums";
+import {useActions} from "../../../../common/hooks";
+import {useAppSelector} from "../../../../common/hooks";
+import {Task} from "../Task/Task";
+import {TaskType} from "../tasks.api";
 
 
 
-export type TasksListPropsType = {
+type PropsType = {
     todoListId: string
     filter: FilteredType
 }
 
-export const TasksList = memo((props: TasksListPropsType) => {
+export const TasksList: React.FC<PropsType> = memo(({todoListId, filter}) => {
 
 
     const {getTasks} = useActions(tasksThunks)
-    const tasks = useAppSelector<TaskType[]>(state => state.tasks[props.todoListId])
+    const tasks = useAppSelector<TaskType[]>(state => state.tasks[todoListId])
 
 
-    useEffect(() => {getTasks(props.todoListId)}, [])
+    useEffect(() => {getTasks(todoListId)}, [])
 
     const taskFilter = () => {
-        return props.filter === "active"
+        return filter === "active"
             ? tasks.filter(task => task.status === TaskStatuses.New)
-            : props.filter === "completed"
+            : filter === "completed"
                 ? tasks.filter(task => task.status === TaskStatuses.Completed)
                 : tasks
     }

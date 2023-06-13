@@ -1,4 +1,4 @@
-import {ResponseType} from "../../common/types/common.types";
+import {ResponseType} from "../../common/types";
 import {instance} from "../../common/api/common.api";
 
 
@@ -25,4 +25,5 @@ export type LoginParamsType = {
     email: string
     password: string
     rememberMe: boolean
+    captcha?: string
 }
