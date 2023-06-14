@@ -1,104 +1,15 @@
-import {TaskPriorities, TaskStatuses} from "common/enums/enums";
-import {TasksType} from "../../../app/App";
-import {tasksSlice, tasksThunks} from "./tasks.slice";
-import {todoListThunks} from "../todoLists.slice";
+import { TaskPriorities, TaskStatuses } from 'common/enums/enums';
+import { tasksSlice, tasksThunks, TasksType } from './tasks.slice';
+import { todoListThunks } from '../todoLists.slice';
 
-
-let startState: TasksType = {}
+let startState: TasksType = {};
 
 beforeEach(() => {
-    startState = {
-        'todoListId1': [
-            {
-                id: '1',
-                title: 'CSS',
-                status: TaskStatuses.New,
-                todoListId: 'todoListId1',
-                description: '',
-                startDate: '',
-                deadline: '',
-                addedDate: '',
-                order: 0,
-                priority: TaskPriorities.Low,
-                completed: true
-            },
-            {
-                id: '2',
-                title: 'JS',
-                status: TaskStatuses.New,
-                todoListId: 'todoListId1',
-                description: '',
-                startDate: '',
-                deadline: '',
-                addedDate: '',
-                order: 0,
-                priority: TaskPriorities.Low,
-                completed: true
-            },
-            {
-                id: '3',
-                title: 'React',
-                status: TaskStatuses.New,
-                todoListId: 'todoListId1',
-                description: '',
-                startDate: '',
-                deadline: '',
-                addedDate: '',
-                order: 0,
-                priority: TaskPriorities.Low,
-                completed: false
-            },
-        ],
-        'todoListId2': [
-            {
-                id: '4',
-                title: 'HTML',
-                status: TaskStatuses.New,
-                todoListId: 'todoListId2',
-                description: '',
-                startDate: '',
-                deadline: '',
-                addedDate: '',
-                order: 0,
-                priority: TaskPriorities.Low,
-                completed: true
-            },
-            {
-                id: '5',
-                title: 'TS',
-                status: TaskStatuses.New,
-                todoListId: 'todoListId2',
-                description: '',
-                startDate: '',
-                deadline: '',
-                addedDate: '',
-                order: 0,
-                priority: TaskPriorities.Low,
-                completed: false
-            },
-            {
-                id: '6',
-                title: 'Redux',
-                status: TaskStatuses.New,
-                todoListId: 'todoListId2',
-                description: '',
-                startDate: '',
-                deadline: '',
-                addedDate: '',
-                order: 0,
-                priority: TaskPriorities.Low,
-                completed: true
-            },
-        ]
-    }
-})
-
-
-test('addTask should add a new task to correct the todolist', () => {
-
-    const task = {
-        id: '6',
-        title: 'SASS',
+  startState = {
+    todoListId1: [
+      {
+        id: '1',
+        title: 'CSS',
         status: TaskStatuses.New,
         todoListId: 'todoListId1',
         description: '',
@@ -107,114 +18,187 @@ test('addTask should add a new task to correct the todolist', () => {
         addedDate: '',
         order: 0,
         priority: TaskPriorities.Low,
-        completed: true
-    };
-    const action = tasksThunks.addTask.fulfilled({task}, 'requestId', {title: task.title, todoListId: task.todoListId});
+        completed: true,
+      },
+      {
+        id: '2',
+        title: 'JS',
+        status: TaskStatuses.New,
+        todoListId: 'todoListId1',
+        description: '',
+        startDate: '',
+        deadline: '',
+        addedDate: '',
+        order: 0,
+        priority: TaskPriorities.Low,
+        completed: true,
+      },
+      {
+        id: '3',
+        title: 'React',
+        status: TaskStatuses.New,
+        todoListId: 'todoListId1',
+        description: '',
+        startDate: '',
+        deadline: '',
+        addedDate: '',
+        order: 0,
+        priority: TaskPriorities.Low,
+        completed: false,
+      },
+    ],
+    todoListId2: [
+      {
+        id: '4',
+        title: 'HTML',
+        status: TaskStatuses.New,
+        todoListId: 'todoListId2',
+        description: '',
+        startDate: '',
+        deadline: '',
+        addedDate: '',
+        order: 0,
+        priority: TaskPriorities.Low,
+        completed: true,
+      },
+      {
+        id: '5',
+        title: 'TS',
+        status: TaskStatuses.New,
+        todoListId: 'todoListId2',
+        description: '',
+        startDate: '',
+        deadline: '',
+        addedDate: '',
+        order: 0,
+        priority: TaskPriorities.Low,
+        completed: false,
+      },
+      {
+        id: '6',
+        title: 'Redux',
+        status: TaskStatuses.New,
+        todoListId: 'todoListId2',
+        description: '',
+        startDate: '',
+        deadline: '',
+        addedDate: '',
+        order: 0,
+        priority: TaskPriorities.Low,
+        completed: true,
+      },
+    ],
+  };
+});
 
-    const endState = tasksSlice(startState, action);
+test('addTask should add a new task to correct the todolist', () => {
+  const task = {
+    id: '6',
+    title: 'SASS',
+    status: TaskStatuses.New,
+    todoListId: 'todoListId1',
+    description: '',
+    startDate: '',
+    deadline: '',
+    addedDate: '',
+    order: 0,
+    priority: TaskPriorities.Low,
+    completed: true,
+  };
+  const action = tasksThunks.addTask.fulfilled({ task }, 'requestId', {
+    title: task.title,
+    todoListId: task.todoListId,
+  });
 
+  const endState = tasksSlice(startState, action);
 
-    expect(endState['todoListId1'][0].id).toBe('6')
-    expect(endState['todoListId1'][0].title).toBe('SASS')
-    expect(endState['todoListId1'].length).toBe(4)
+  expect(endState['todoListId1'][0].id).toBe('6');
+  expect(endState['todoListId1'][0].title).toBe('SASS');
+  expect(endState['todoListId1'].length).toBe(4);
 });
 
 test('tasks should be added to todolist', () => {
+  const action = tasksThunks.getTasks.fulfilled(
+    {
+      todoListId: 'todoListId1',
+      tasks: startState['todoListId1'],
+    },
+    'requestId',
+    'todoListId1'
+  );
 
+  const endState = tasksSlice({ todoListId1: [], todoListId2: [] }, action);
 
-    const action = tasksThunks.getTasks.fulfilled({
-        todoListId: 'todoListId1',
-        tasks: startState['todoListId1']
-    }, 'requestId', 'todoListId1');
-
-    const endState = tasksSlice({'todoListId1': [], 'todoListId2': []}, action);
-
-
-    expect(endState['todoListId1'].length).toEqual(3)
-    expect(endState['todoListId2'].length).toEqual(0)
-
+  expect(endState['todoListId1'].length).toEqual(3);
+  expect(endState['todoListId2'].length).toEqual(0);
 });
 test('updateTask should update correct task title in correct todolist', () => {
+  const args = { todoListId: 'todoListId1', taskId: '3', domainModel: { title: 'New title' } };
+  const action = tasksThunks.updateTask.fulfilled(args, 'requestId', args);
 
-    const args = {todoListId: 'todoListId1', taskId: "3", domainModel: {title: "New title"}}
-    const action = tasksThunks.updateTask.fulfilled(args, 'requestId', args);
+  const endState = tasksSlice(startState, action);
 
-    const endState = tasksSlice(startState, action);
-
-
-    expect(endState['todoListId1'][2].title).toBe('New title')
+  expect(endState['todoListId1'][2].title).toBe('New title');
 });
 test('updateTask should update correct task status in correct todolist', () => {
+  const args = { todoListId: 'todoListId1', taskId: '2', domainModel: { status: TaskStatuses.Completed } };
+  const action = tasksThunks.updateTask.fulfilled(args, 'requestId', args);
 
-    const args = {todoListId: 'todoListId1', taskId: "2", domainModel: {status: TaskStatuses.Completed}}
-    const action = tasksThunks.updateTask.fulfilled(args, 'requestId', args);
+  const endState = tasksSlice(startState, action);
 
-    const endState = tasksSlice(startState, action);
-
-
-    expect(endState['todoListId1'][1].status).toBe(TaskStatuses.Completed)
+  expect(endState['todoListId1'][1].status).toBe(TaskStatuses.Completed);
 });
 test('removeTask should add a delete task from correct todolist', () => {
+  const args = { todoListId: 'todoListId2', taskId: '4' };
+  const action = tasksThunks.deleteTask.fulfilled(args, 'requestId', args);
 
-    const args = {todoListId: 'todoListId2', taskId: "4"}
-    const action = tasksThunks.deleteTask.fulfilled(args, 'requestId', args);
+  const endState = tasksSlice(startState, action);
 
-    const endState = tasksSlice(startState, action);
-
-
-    expect(endState['todoListId2'][0].id).toBe('5')
-    expect(endState['todoListId2'][0].title).toBe('TS')
-    expect(endState['todoListId2'].length).toBe(2)
+  expect(endState['todoListId2'][0].id).toBe('5');
+  expect(endState['todoListId2'][0].title).toBe('TS');
+  expect(endState['todoListId2'].length).toBe(2);
 });
-
 
 test('removeTodoList should delete all tasks in correct deleted todolist', () => {
+  const action = todoListThunks.removeTodoList.fulfilled({ todoListId: 'todoListId1' }, 'requestId', 'todoListId1');
 
+  const endState = tasksSlice(startState, action);
 
-    const action = todoListThunks.removeTodoList.fulfilled({todoListId: 'todoListId1'}, 'requestId', 'todoListId1');
+  const keys = Object.keys(endState);
 
-    const endState = tasksSlice(startState, action);
-
-    const keys = Object.keys(endState)
-
-    expect(keys.length).toBe(1)
-    expect(endState['todoListId1']).not.toBeDefined()
+  expect(keys.length).toBe(1);
+  expect(endState['todoListId1']).not.toBeDefined();
 });
 test('addTodoList should add empty array of tasks in correct todolist', () => {
+  const args = { todoList: { id: 'todoListId3', title: 'new todo', order: 0, addedDate: '' } };
 
-    const args = {todoList: {id: 'todoListId3', title: 'new todo', order: 0, addedDate: ''}}
+  const action = todoListThunks.addTodoList.fulfilled(args, 'requestId', 'new todo');
 
-    const action = todoListThunks.addTodoList.fulfilled(args, 'requestId', 'new todo');
+  const endState = tasksSlice(startState, action);
 
-    const endState = tasksSlice(startState, action);
-
-
-    const keys = Object.keys(endState)
-    const newKey = keys.find(k => k != 'todoListId1' && k != 'todoListId2')
-    if (!newKey) {
-        throw Error('new key should be added')
-    }
-    expect(endState[newKey]).toEqual([])
-    expect(keys.length).toBe(3)
+  const keys = Object.keys(endState);
+  const newKey = keys.find((k) => k != 'todoListId1' && k != 'todoListId2');
+  if (!newKey) {
+    throw Error('new key should be added');
+  }
+  expect(endState[newKey]).toEqual([]);
+  expect(keys.length).toBe(3);
 });
 
-
 test('empty array should be added when we set todoLists', () => {
+  const args = {
+    todoLists: [
+      { id: '1', title: 'blabla1', order: 0, addedDate: '' },
+      { id: '2', title: 'blabla2', order: 0, addedDate: '' },
+    ],
+  };
+  const action = todoListThunks.getTodoLists.fulfilled(args, 'requestId');
 
-    const args = {
-        todoLists: [
-            {id: '1', title: 'blabla1', order: 0, addedDate: ''},
-            {id: '2', title: 'blabla2', order: 0, addedDate: ''},
-        ]
-    }
-    const action = todoListThunks.getTodoLists.fulfilled(args, 'requestId');
+  const endState = tasksSlice({}, action);
 
-    const endState = tasksSlice({}, action);
+  const keys = Object.keys(endState);
 
-
-    const keys = Object.keys(endState)
-
-    expect(keys.length).toBe(2)
-    expect(endState['1']).toBeDefined()
-    expect(endState['2']).toBeDefined()
+  expect(keys.length).toBe(2);
+  expect(endState['1']).toBeDefined();
+  expect(endState['2']).toBeDefined();
 });

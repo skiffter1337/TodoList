@@ -1,18 +1,16 @@
-import {authActions, authSlice} from "./auth.slice";
+import { authActions, authSlice } from './auth.slice';
 
-
-let startState: {isLoggedIn: boolean};
+let startState: { isLoggedIn: boolean };
 beforeEach(() => {
-    startState = {
-        isLoggedIn: false
-    }
-})
+  startState = {
+    isLoggedIn: false,
+  };
+});
 
 test('setRequestStatus should be changed', () => {
+  const action = authActions.setIsLogin({ isLoggedIn: true });
 
-    const action = authActions.setIsLogin({isLoggedIn: true});
+  const endState = authSlice(startState, action);
 
-    const endState = authSlice(startState, action);
-
-    expect(endState.isLoggedIn).toBe(true)
+  expect(endState.isLoggedIn).toBe(true);
 });

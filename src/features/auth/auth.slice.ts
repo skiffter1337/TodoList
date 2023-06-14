@@ -4,7 +4,7 @@ import { createAppAsyncThunk } from '../../common/ulits';
 import { authAPI, LoginParamsType } from './auth.api';
 import { ResultCode } from '../../common/enums';
 
-const login = createAppAsyncThunk<{ isLoggedIn: boolean }, LoginParamsType>(
+export const login = createAppAsyncThunk<{ isLoggedIn: boolean }, LoginParamsType>(
   'auth/login',
   async (arg, { rejectWithValue }) => {
     const res = await authAPI.login(arg);
@@ -16,15 +16,18 @@ const login = createAppAsyncThunk<{ isLoggedIn: boolean }, LoginParamsType>(
   }
 );
 
-const logout = createAppAsyncThunk<{ isLoggedIn: boolean }>('auth/logout', async (_, { dispatch, rejectWithValue }) => {
-  const res = await authAPI.logout();
-  if (res.data.resultCode === ResultCode.Success) {
-    dispatch(clearTasksAndTodoLists());
-    return { isLoggedIn: false };
-  } else {
-    return rejectWithValue(res.data);
+export const logout = createAppAsyncThunk<{ isLoggedIn: boolean }>(
+  'auth/logout',
+  async (_, { dispatch, rejectWithValue }) => {
+    const res = await authAPI.logout();
+    if (res.data.resultCode === ResultCode.Success) {
+      dispatch(clearTasksAndTodoLists());
+      return { isLoggedIn: false };
+    } else {
+      return rejectWithValue(res.data);
+    }
   }
-});
+);
 
 const slice = createSlice({
   name: 'auth',

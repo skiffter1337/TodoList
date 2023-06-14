@@ -1,0 +1,11 @@
+.todolist {
+    border: 2px solid #003459;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #f2f2f2;
+}
+
+.filter_btn_container {
+    display: flex;
+    justify-content: space-around;
+}

@@ -1,4 +1,3 @@
-import { TasksType } from 'app/App';
 import { createSlice } from '@reduxjs/toolkit';
 import { appActions } from 'app/app.slice';
 import { todoListThunks } from 'features/todolists/todoLists.slice';
@@ -6,6 +5,10 @@ import { clearTasksAndTodoLists } from '../../../common/actions/commonActions';
 import { createAppAsyncThunk } from '../../../common/ulits';
 import { ResultCode } from '../../../common/enums';
 import { AddTaskArgsType, DeleteTaskArgsType, tasksAPI, TaskType, UpdateTaskArgsType } from './tasks.api';
+
+export type TasksType = {
+  [todoListId: string]: TaskType[];
+};
 
 const initialState: TasksType = {};
 

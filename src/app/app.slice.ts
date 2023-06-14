@@ -3,7 +3,6 @@ import {createAppAsyncThunk} from "../common/ulits";
 import {authAPI} from "../features/auth/auth.api";
 import {ResultCode} from "../common/enums";
 import {authActions} from "../features/auth/auth.slice";
-import {thunkTryCatch} from "../common/ulits/thunk-try-catch";
 
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
@@ -14,19 +13,18 @@ export type AppInitialStateType = {
 }
 
 
-export const initializeApp  = createAppAsyncThunk('app/me', async (arg, thunkAPI) => {
+export const initializeApp = createAppAsyncThunk('app/me', async (arg, thunkAPI) => {
     const {dispatch, rejectWithValue} = thunkAPI
-   return thunkTryCatch(thunkAPI, async () => {
+    try {
         const res = await authAPI.me()
         if (res.data.resultCode === ResultCode.Success) {
-            dispatch(appActions.setRequestStatus({status: 'succeeded'}))
             dispatch(authActions.setIsLogin({isLoggedIn: true}))
         } else {
-            dispatch(appActions.setRequestStatus({status: 'failed'}))
-            return rejectWithValue(null)
+            return rejectWithValue(res.data)
         }
-   }, true)
-    // fix shouldInit
+    } finally {
+        dispatch(appActions.setInitialized({isInitialized: true}))
+    }
 })
 
 
@@ -48,29 +46,30 @@ const slice = createSlice({
             state.isInitialized = action.payload.isInitialized
         }
     },
-    extraReducers: builder =>  {
+    extraReducers: builder => {
         builder
             .addMatcher(
-                (action) => {
-                    return action.type.endsWith('/pending')
-                },
+                action => action.type.endsWith('/pending'),
                 (state) => {
                     state.status = 'loading'
                 })
             .addMatcher(
-                (action) => {
-                    return action.type.endsWith('/rejected')
-                },
+                action => action.type.endsWith('/rejected'),
                 (state, action) => {
-                    state.error = action.payload.messages[0]
-                    state.status = 'failed'
+                    const {payload, error} = action
+                    if (payload) {
+                        state.error = payload.messages.length ? payload.messages[0] : 'Some error occurred'
+                        state.status = 'failed'
+                    } else {
+                        state.error = error.message ? error.message : 'Some error occurred'
+                    }
                 })
             .addMatcher(
                 (action) => {
                     return action.type.endsWith('/fulfilled')
                 },
                 (state) => {
-                    state.status = 'idle'
+                    state.status = 'succeeded'
                 })
     }
 })
