@@ -1,9 +1,10 @@
 import { authActions, authSlice } from './auth.slice';
 
-let startState: { isLoggedIn: boolean };
+let startState: { isLoggedIn: boolean; captchaURL: string };
 beforeEach(() => {
   startState = {
     isLoggedIn: false,
+    captchaURL: '',
   };
 });
 
